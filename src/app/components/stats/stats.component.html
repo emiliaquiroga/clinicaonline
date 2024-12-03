@@ -1,0 +1,250 @@
+
+<div class="h-screen w-screen flex flex-col overflow-x-hidden">
+    <div class="h-16 min-h-16 w-full flex flex-row items-center justify-between px-6 bg-customDarkBlue z-50">
+        <div class="h-full flex flex-1 items-center flex-row gap-4">
+            <img src="/assets/clinica.png" alt="" class="h-7 w-7">
+            <h1 class="text-slate-100 font-bold text-xl">Informes y estadisticas</h1>
+        </div>
+        <div class="w-full h-full flex flex-1 items-center justify-end flex-row gap-12">
+            <button routerLink="/home" class="group h-8 w-24 rounded-full font-semibold bg-slate-100 text-customDarkBlue flex flex-row gap-1 justify-center items-center shadow-2xl hover:bg-customBlue hover:text-slate-100 transition-colors">
+                <img src="/assets/home-azul.png" class="h-4 w-4 block group-hover:hidden" >
+                <img src="/assets/home.png" class="hidden h-4 w-4 group-hover:block" >
+                <p class="text-sm font-semibold mt-px">Home</p>
+            </button>
+            <button routerLink="/perfil" class="rounded-full flex justify-center items-center shadow-2xl pr-6">
+                <img src={{user.foto1}} alt="" class="h-10 w-10 rounded-full  sticky">
+            </button>
+        </div>
+        <div class="h-full w-12 flex justify-center items-center -ml-3">
+            <img (click)="toggleCerrandoSesion()" src="/assets/volver.png" alt="" class="h-3 w-3 -rotate-90 cursor-pointer">
+        </div>
+    </div>
+    @if (cerrandoSesion) {
+        <div class="w-full flex justify-end">
+            <div (click)="cerrarSesion()" class="w-32 h-10 rounded-md flex justify-center items-center flex-row gap-1.5 cursor-pointer mr-[2%] mt-1 bg-red-600 hover:bg-red-800 transition-all">
+                <img src="/assets/volver.png" alt="" class="h-4 w-4 cursor-pointer">
+                <p class="text-sm font-medium text-white whitespace-nowrap">Cerrar Sesión</p>
+            </div>
+        </div>
+    }
+    <div class="h-full w-full flex flex-col bg-slate-200">
+        <div class="h-12 w-full flex justify-center items-center flex-row">
+            @switch (pantalla) {
+                @case ('ingresos') {
+                    <div (click)="pantalla = 'ingresos'" class="w-full h-full border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Ingresos</p>
+                    </div>
+                    <div (click)="pantalla = 'turnosporespecialidad'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos por especialidad</p>
+                    </div>
+                    <div (click)="pantalla = 'turnospordia'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos por día</p>
+                    </div>
+                    <div (click)="pantalla = 'turnossolicitados'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos solicitados, por medico</p>
+                    </div>
+                    <div (click)="pantalla = 'turnosfinalizados'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos finalizados, por medico</p>
+                    </div>
+                }
+                @case ('turnosporespecialidad') {
+                    <div (click)="pantalla = 'ingresos'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Ingresos</p>
+                    </div>
+                    <div (click)="pantalla = 'turnosporespecialidad'" class="w-full h-full border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos por especialidad</p>
+                    </div>
+                    <div (click)="pantalla = 'turnospordia'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos por día</p>
+                    </div>
+                    <div (click)="pantalla = 'turnossolicitados'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos solicitados, por medico</p>
+                    </div>
+                    <div (click)="pantalla = 'turnosfinalizados'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos finalizados, por medico</p>
+                    </div>
+                }
+                @case ('turnospordia') {
+                    <div (click)="pantalla = 'ingresos'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Ingresos</p>
+                    </div>
+                    <div (click)="pantalla = 'turnosporespecialidad'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos por especialidad</p>
+                    </div>
+                    <div (click)="pantalla = 'turnospordia'" class="w-full h-full border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos por día</p>
+                    </div>
+                    <div (click)="pantalla = 'turnossolicitados'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos solicitados, por medico</p>
+                    </div>
+                    <div (click)="pantalla = 'turnosfinalizados'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos finalizados, por medico</p>
+                    </div>
+                }
+                @case ('turnossolicitados') {
+                    <div (click)="pantalla = 'ingresos'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Ingresos</p>
+                    </div>
+                    <div (click)="pantalla = 'turnosporespecialidad'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos por especialidad</p>
+                    </div>
+                    <div (click)="pantalla = 'turnospordia'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos por día</p>
+                    </div>
+                    <div (click)="pantalla = 'turnossolicitados'" class="w-full h-full border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos solicitados, por medico</p>
+                    </div>
+                    <div (click)="pantalla = 'turnosfinalizados'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos finalizados, por medico</p>
+                    </div>
+                }
+                @case ('turnosfinalizados') {
+                    <div (click)="pantalla = 'ingresos'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Ingresos</p>
+                    </div>
+                    <div (click)="pantalla = 'turnosporespecialidad'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos por especialidad</p>
+                    </div>
+                    <div (click)="pantalla = 'turnospordia'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos por día</p>
+                    </div>
+                    <div (click)="pantalla = 'turnossolicitados'" class="w-full h-full border-b-2 border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer hover:bg-white transition-all">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos solicitados, por medico</p>
+                    </div>
+                    <div (click)="pantalla = 'turnosfinalizados'" class="w-full h-full border-r-2 border-customDarkBlue flex justify-center items-center cursor-pointer">
+                        <p class="text-sm text-customDarkBlue font-semibold text-center">Turnos finalizados, por medico</p>
+                    </div>
+                }
+            }
+        </div>
+        <div class="h-full w-full flex justify-center items-center">
+            @switch (pantalla) {
+                @case ('ingresos') {
+                    <div class="w-full h-full flex flex-col justify-center items-center gap-6 p-6">
+                        <p class="text-xl font-bold text-customDarkBlue">Registro de ingresos al sistema</p>
+                        <div class="h-[90%] max-h-[90%] w-[95%] rounded-md border-2 border-customDarkBlue overflow-y-auto flex flex-col items-center justify-center gap-3">
+                            <table class="h-full w-full overflow-y-scroll">
+                                <thead class="w-full">
+                                    <tr class="w-full h-8 bg-customDarkBlue text-slate-100 min-h-8">
+                                        <th class="flex-1">Nombre</th>
+                                        <th class="flex-1">DNI</th>
+                                        <th class="flex-1">Tipo</th>
+                                        <th class="flex-1">Fecha</th>
+                                        <th class="flex-1">Hora</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="w-full">
+                                    @for (item of ingresoLogs; track $index) {
+                                        <tr class="w-full bg-slate-100 font-medium text-customDarkBlue min-h-11" >
+                                            <td class="flex-1 border-r border-customDarkBlue text-center">{{item.nombre}}</td>
+                                            <td class="flex-1 border-r border-customDarkBlue text-center">{{item.dni}}</td>
+                                            <td class="flex-1 border-r border-customDarkBlue text-center">{{item.type | primeraLetraAMayus}}</td>
+                                            <td class="flex-1 border-r border-customDarkBlue text-center">{{item.fecha}}</td>
+                                            <td class="flex-1 border-r border-customDarkBlue text-center">{{item.hora}}</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div appToolTip="Descargar datos en Excel." (click)="exportarIngresoLogs()" class="absolute left-0 bottom-0 ml-8 mb-4 flex justify-center items-center px-4 py-2.5 bg-customDarkBlue rounded-full flex-row gap-3 shadow-2xl cursor-pointer hover:scale-95 hover:shadow-none hover:bg-red-600 transition-all duration-300">
+                        <p class="text-white font-semibold text-base">Descargar</p>
+                        <img src="/assets/descargar.png" alt="" class="h-4 w-4">
+                    </div>
+                }
+                @case ('turnosporespecialidad') {
+                    <div class="h-full w-full flex flex-col justify-center items-center gap-8 p-20">
+                        <p class="text-customDarkBlue text-2xl font-bold">Cantidad de Turnos por Especialidad</p>
+                        <div class="h-full w-full flex justify-center items-center gap-8">
+                            <app-turnos-por-especialidad [turnosPorEspecialidad]="turnosPorEspecialidad"></app-turnos-por-especialidad>
+                        </div>
+                    </div>
+                    <div appToolTip="Descargar datos en Excel." (click)="exportarTurnosPorEspecialidad()" class="absolute left-0 bottom-0 ml-8 mb-4 flex justify-center items-center px-4 py-2.5 bg-customDarkBlue rounded-full flex-row gap-3 shadow-2xl cursor-pointer hover:scale-95 hover:shadow-none hover:bg-red-600 transition-all duration-300">
+                        <p class="text-white font-semibold text-base">Descargar</p>
+                        <img src="/assets/descargar.png" alt="" class="h-4 w-4">
+                    </div>
+                }
+                @case ('turnospordia') {
+                    <div class="h-full w-full flex flex-col justify-center items-center gap-8 p-20">
+                        <p class="text-customDarkBlue text-2xl font-bold">Turnos por día</p>
+                        <div class="h-full w-full flex justify-center items-center gap-8">
+                            <app-turnos-por-dia [turnosPorDia]="turnosPorDia"></app-turnos-por-dia>
+                        </div>
+                    </div>
+                    <div appToolTip="Descargar datos en Excel." (click)="exportarTurnosPorDia()" class="absolute left-0 bottom-0 ml-8 mb-4 flex justify-center items-center px-4 py-2.5 bg-customDarkBlue rounded-full flex-row gap-3 shadow-2xl cursor-pointer hover:scale-95 hover:shadow-none hover:bg-red-600 transition-all duration-300">
+                        <p class="text-white font-semibold text-base">Descargar</p>
+                        <img src="/assets/descargar.png" alt="" class="h-4 w-4">
+                    </div>
+                }
+                @case ('turnossolicitados') {   
+                    <div class="h-full w-full flex flex-col justify-center items-center gap-8 py-10">
+                        <div class="flex flex-row gap-5">
+                            <p class="text-customDarkBlue text-xl font-bold">Cantidad de Turnos por Especialista entre las fechas:</p>
+                            <div class="flex flex-row gap-1 items-center">
+                                <input [(ngModel)]="diaComienzo" min="0" max="31" placeholder="Día" type="number" class="h-8 w-14 bg-white rounded-md shadow-lg pl-2 text-customDarkBlue placeholder:text-sm">
+                                <p class="text-customDarkBlue font-medium text-lg">/</p>
+                                <input [(ngModel)]="mesComienzo" min="0" max="12" placeholder="Mes" type="number" class="h-8 w-14 bg-white rounded-md shadow-lg pl-2 text-customDarkBlue placeholder:text-sm">
+                                <p class="text-customDarkBlue font-medium text-lg">/</p>
+                                <input [(ngModel)]="anioComienzo" min="2020" max="2030" placeholder="Año" type="number" class="h-8 w-16 bg-white rounded-md shadow-lg pl-2 text-customDarkBlue placeholder:text-sm">
+                            </div>
+                            <p class="text-customDarkBlue text-xl font-bold">Y</p>
+                            <div class="flex flex-row gap-1 items-center">
+                                <input [(ngModel)]="diaFinal" min="0" max="31" placeholder="Día" type="number" class="h-8 w-14 bg-white rounded-md shadow-lg pl-2 text-customDarkBlue placeholder:text-sm">
+                                <p class="text-customDarkBlue font-medium text-lg">/</p>
+                                <input [(ngModel)]="mesFinal" min="0" max="12" placeholder="Mes" type="number" class="h-8 w-14 bg-white rounded-md shadow-lg pl-2 text-customDarkBlue placeholder:text-sm">
+                                <p class="text-customDarkBlue font-medium text-lg">/</p>
+                                <input [(ngModel)]="anioFinal" min="2020" max="2030" placeholder="Año" type="number" class="h-8 w-16 bg-white rounded-md shadow-lg pl-2 text-customDarkBlue placeholder:text-sm">
+                            </div>
+                            <button (click)="obtenerTurnosPorMedicoEnLapsoDeTiempo()" class="px-3 py-1.5 rounded-md bg-customDarkBlue text-white font-bold shadow-xl hover:bg-customLightBlue hover:scale-95 hover:shadow-none transition-all">Buscar</button>
+                        </div>
+                        <div class="h-full w-full flex justify-center items-center gap-8">
+                            @if (diaComienzo && mesComienzo && anioComienzo && diaFinal && mesFinal && anioFinal) {
+                                <app-turnos-solicitados-medico [turnosPorMedico]="turnosPorMedico"></app-turnos-solicitados-medico>
+                            } @else {
+                                <p class="text-red-500 text-xl font-bold">Completa los campos de fecha para ver el grafico</p>
+                            }
+                        </div>
+                    </div>
+                    <div appToolTip="Descargar datos en Excel." (click)="exportarTurnosPorMedico()" class="absolute left-0 bottom-0 ml-8 mb-4 flex justify-center items-center px-4 py-2.5 bg-customDarkBlue rounded-full flex-row gap-3 shadow-2xl cursor-pointer hover:scale-95 hover:shadow-none hover:bg-red-600 transition-all duration-300">
+                        <p class="text-white font-semibold text-base">Descargar</p>
+                        <img src="/assets/descargar.png" alt="" class="h-4 w-4">
+                    </div>
+                }
+                @case ('turnosfinalizados') {
+                    <div class="h-full w-full flex flex-col justify-center items-center gap-8 py-10">
+                        <div class="flex flex-row gap-5">
+                            <p class="text-customDarkBlue text-lg font-bold">Cantidad de Turnos <i>FINALIZADOS</i> por Especialista entre las fechas:</p>
+                            <div class="flex flex-row gap-1 items-center">
+                                <input [(ngModel)]="diaComienzo" min="0" max="31" placeholder="Día" type="number" class="h-8 w-14 bg-white rounded-md shadow-lg pl-2 text-customDarkBlue placeholder:text-sm">
+                                <p class="text-customDarkBlue font-medium text-lg">/</p>
+                                <input [(ngModel)]="mesComienzo" min="0" max="12" placeholder="Mes" type="number" class="h-8 w-14 bg-white rounded-md shadow-lg pl-2 text-customDarkBlue placeholder:text-sm">
+                                <p class="text-customDarkBlue font-medium text-lg">/</p>
+                                <input [(ngModel)]="anioComienzo" min="2020" max="2030" placeholder="Año" type="number" class="h-8 w-16 bg-white rounded-md shadow-lg pl-2 text-customDarkBlue placeholder:text-sm">
+                            </div>
+                            <p class="text-customDarkBlue text-lg font-bold">Y</p>
+                            <div class="flex flex-row gap-1 items-center">
+                                <input [(ngModel)]="diaFinal" min="0" max="31" placeholder="Día" type="number" class="h-8 w-14 bg-white rounded-md shadow-lg pl-2 text-customDarkBlue placeholder:text-sm">
+                                <p class="text-customDarkBlue font-medium text-lg">/</p>
+                                <input [(ngModel)]="mesFinal" min="0" max="12" placeholder="Mes" type="number" class="h-8 w-14 bg-white rounded-md shadow-lg pl-2 text-customDarkBlue placeholder:text-sm">
+                                <p class="text-customDarkBlue font-medium text-lg">/</p>
+                                <input [(ngModel)]="anioFinal" min="2020" max="2030" placeholder="Año" type="number" class="h-8 w-16 bg-white rounded-md shadow-lg pl-2 text-customDarkBlue placeholder:text-sm">
+                            </div>
+                            <button appToolTip="Descargar datos en Excel." (click)="obtenerTurnosFinalizadosPorMedicoEnLapsoDeTiempo()" class="px-3 py-1.5 rounded-md bg-customDarkBlue text-white font-bold shadow-xl hover:bg-customLightBlue hover:scale-95 hover:shadow-none transition-all">Buscar</button>
+                        </div>
+                        <div class="h-full w-full flex justify-center items-center gap-8">
+                            @if (diaComienzo && mesComienzo && anioComienzo && diaFinal && mesFinal && anioFinal) {
+                                <app-turnos-finalizados-medico [turnosFinalizados]="turnosFinalizadosPorMedico"></app-turnos-finalizados-medico>
+                            } @else {
+                                <p class="text-red-500 text-xl font-bold">Completa los campos de fecha para ver el grafico</p>
+                            }
+                        </div>
+                    </div>
+                    <div (click)="exportarTurnosFinalizadosPorMedico()" class="absolute left-0 bottom-0 ml-8 mb-4 flex justify-center items-center px-4 py-2.5 bg-customDarkBlue rounded-full flex-row gap-3 shadow-2xl cursor-pointer hover:scale-95 hover:shadow-none hover:bg-red-600 transition-all duration-300">
+                        <p class="text-white font-semibold text-base">Descargar</p>
+                        <img src="/assets/descargar.png" alt="" class="h-4 w-4">
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

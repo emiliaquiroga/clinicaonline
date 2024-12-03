@@ -1,0 +1,61 @@
+<div class="h-screen w-screen flex justify-center items-center bg-[url(/assets/medicos/3.jpg)] bg-cover overflow-hidden">
+    <div class="h-full w-full flex flex-row justify-center items-center bg-customLightBlue/60 gap-4">
+            <!--SECCION ACCESO RAPIDO -->
+            <div class="w-16 h-5/6 flex flex-col justify-between items-center">
+                <div *ngFor="let user of fastLoginUsers" 
+                        (click)="fastLogin(user.email, user.password)" 
+                        class="group h-14 w-14 flex items-center justify-center rounded-lg bg-white/50 cursor-pointer hover:scale-95 hover:bg-white/75 transition-all duration-300">
+                    <img [src]="userImages[user.dni]" 
+                        alt="Foto del usuario" 
+                        class="h-8 w-8 group-hover:scale-105 transition-all duration-300">
+                    </div>
+                </div>
+            <!--END SECCION ACCESO RAPIDO-->
+                
+        <div class="w-3/4 md:h-5/6 p-6 pl-8 flex flex-col items-center md:flex-row rounded-md gap-6 bg-white/50">
+            <div class="w-[98%] md:w-[420px] h-96 flex flex-col bg-slate-100 rounded-md shadow-2xl overflow-y-auto">
+                <div class="h-full w-full flex flex-col rounded-md gap-4 py-5 px-10">
+                    <div>
+                        <p class="btn-shine text-customLightBlue font-bold text-xl text-center">Ingresá a tu cuenta</p>
+                    </div>
+                    <div class="mt-8">
+                        <label for="email" class="text-customLightBlue font-medium text-sm">Correo electrónico</label>
+                        <input id="email" type="email" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="email">
+                    </div>
+                    <div>
+                        <label for="password" class="text-customLightBlue font-medium text-sm">Contraseña</label>
+                        <input id="password" type="password" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="password">
+                    </div>
+                    <div class="mt-auto">
+                        <button (click)="login()" class="w-full h-10 rounded-md bg-customLightBlue text-white font-medium hover:bg-customDarkBlue hover:shadow-2xl hover:shadow-customLightBlue transition-all duration-200">Ingresá</button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-row gap-1.5 justify-center md:hidden">
+                <p class="text-black text-sm md:text-base">¿No tienes una cuenta?</p>
+                <p routerLink="/signup" class="text-sm md:text-base text-customLightBlue underline cursor-pointer hover:text-customDarkBlue transition-colors">Registrate</p>
+            </div>
+            <div class="h-full flex flex-col items-center md:items-stretch md:justify-center gap-6">
+                <div class="flex flex-row gap-3">
+                    <img src="../../../assets/clinica_dark.png" alt="" class="h-9 w-9 hidden md:block drop-shadow-sm">
+                    <img src="../../../assets/clinica_dark.png" alt="" class="h-7 w-7 block md:hidden drop-shadow-sm">
+                    <h1 class="text-customDarkBlue font-bold text-2xl md:text-4xl drop-shadow-sm">Iniciá Sesión</h1>
+                </div>
+                <p class="text-customDarkBlue font-medium text-sm md:text-lg md:text-start text-center drop-shadow-sm">Completa tus datos para poder ingresar a la plataforma</p>
+                <div class="flex justify-center items-center">
+                    <img src="../../../assets/login.svg" alt="" class="h-52 w-52 hidden md:block">
+                    <img src="../../../assets/login.svg" alt="" class="h-28 w-28 block md:hidden">
+                </div>
+                <div class="hidden flex-row gap-1.5 justify-center md:flex">
+                    <p class="text-black text-sm md:text-base drop-shadow-sm">¿No tienes una cuenta?</p>
+                    <p routerLink="/signup" class="text-sm md:text-base text-customLightBlue underline cursor-pointer drop-shadow-sm hover:text-customDarkBlue transition-colors">Registrate</p>
+                </div>s
+            </div>
+        </div>
+
+    <div routerLink="/bienvenida" class="group absolute left-0 bottom-0 h-10 w-[104px] bg-customDarkBlue rounded-md ml-7 md:ml-20 mb-16 md:mb-7 flex justify-center items-center gap-2 cursor-pointer hover:bg-slate-100 hover:rounded-full transition-all duration-200">
+        <img src="../../../assets/volver.png" alt="" class="block group-hover:hidden w-4 h-4 transition-all duration-200">
+        <img src="../../../assets/volver2.png" alt="" class=" hidden group-hover:block w-4 h-4 transition-all duration-200">
+        <p class="text-white font-semibold group-hover:text-customLightBlue transition-colors duration-200">Volver</p>
+    </div>
+</div>

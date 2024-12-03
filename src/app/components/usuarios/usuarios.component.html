@@ -1,0 +1,271 @@
+
+<div class="h-screen w-screen flex flex-col overflow-x-hidden">
+    <div class="h-16 min-h-16 w-full flex flex-row items-center justify-between px-6 bg-customDarkBlue z-50">
+        <div class="h-full flex flex-1 items-center flex-row gap-4">
+            <img src="/assets/clinica.png" alt="" class="h-7 w-7">
+            <h1 class="text-slate-100 font-bold text-xl">Sección Usuarios</h1>
+        </div>
+        <div class="h-full flex flex-1 items-center justify-end flex-row gap-4">
+                <div *ngIf="!agregandoUsuario">
+                    <button (click)="downloadUsersExcel()" class="h-8 w-40 rounded-full bg-slate-100 text-customBlue flex justify-center items-center shadow-2xl hover:bg-customBlue hover:text-slate-100 transition-colors">
+                        <p class="text-sm font-semibold">Descargar usuarios</p>
+                    </button>
+                    <button (click)="agregandoUsuario = true" class="h-8 w-36 rounded-full bg-slate-100 text-customBlue flex justify-center items-center shadow-2xl hover:bg-customBlue hover:text-slate-100 transition-colors">
+                        <p class="text-sm font-semibold">Nuevo Usuario</p>
+                    </button>
+                </div>
+
+                <button *ngIf="agregandoUsuario" (click)="agregandoUsuario = false" class="h-8 w-52 rounded-full bg-red-600 text-white flex justify-center items-center shadow-2xl hover:bg-red-700 hover:text-slate-100 transition-colors">
+                    <p class="text-sm font-semibold">Cancelar agregar usuario</p>
+                </button>
+
+            <button routerLink="home" class="h-8 w-24 rounded-full bg-slate-100 text-customBlue flex justify-center items-center shadow-2xl hover:bg-customBlue hover:text-slate-100 transition-colors">
+                <p class="text-sm font-semibold">Home</p>
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="agregandoUsuario" class="h-full w-full flex justify-center items-center backdrop-blur-md z-40 absolute mt-6">
+        <div class="w-[420px] h-[470px] flex flex-col bg-slate-100 rounded-md shadow-2xl overflow-y-auto">
+            <div class="h-10 min-h-10 w-full flex flex-row rounded-t-md cursor-pointer">
+                <div (click)="userType = 'paciente'"  class="h-full w-1/2 flex justify-center items-center" [ngClass]="{'border-x-2 border-b-2': userType !== 'paciente'}">
+                    <h1 class="text-customLightBlue font-medium">Paciente</h1>
+                </div>
+
+                <!-- Opción: Especialista -->
+                <div (click)="userType = 'especialista'" class="h-full w-1/2 flex justify-center items-center" [ngClass]="{'border-x-2 border-b-2': userType !== 'especialista'}">
+                    <h1 class="text-customLightBlue font-medium">Especialista</h1>
+                </div>
+
+                <!-- Opción: Administrador -->
+                <div (click)="userType = 'admin'" class="h-full w-1/2 flex justify-center items-center" [ngClass]="{'border-b-2': userType !== 'admin'}">
+                    <h1 class="text-customLightBlue font-medium">Administrador</h1>
+                </div>
+            </div>
+
+            <div class="h-full w-full flex flex-col rounded-md gap-4 py-5 px-10">
+                <div class="flex flex-row gap-4">
+                    <div class="flex flex-col">
+                        <label for="name" class="text-customLightBlue font-medium text-sm">Nombre</label>
+                        <input id="name" type="text" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="name">
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="lastname" class="text-customLightBlue font-medium text-sm">Apellido</label>
+                        <input id="lastname" type="text" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="lastname">
+                    </div>
+                </div>
+
+                <div class="flex flex-row gap-4">
+                    <div class="w-1/4 flex flex-col">
+                        <label for="edad" class="text-customLightBlue font-medium text-sm">Edad</label>
+                        <input id="edad" type="number" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="edad">
+                    </div>
+                    <div class="w-3/4 flex flex-col">
+                        <label for="dni" class="text-customLightBlue font-medium text-sm">DNI</label>
+                        <input id="dni" type="number" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="dni">
+                    </div>
+                </div>
+
+                <div *ngIf="userType == 'paciente'">
+                    <label for="obrasocial" class="text-customLightBlue font-medium text-sm">Obra social</label>
+                    <input type="obrasocial" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="obrasocial">
+                </div>
+
+                <div *ngIf="userType == 'especialista'">
+                    <div class="flex flex-col">
+                        <label for="listaespecialidad" class="text-customLightBlue font-medium text-sm">Especialidad</label>
+                        <select name="listaespecialidad" id="listaespecialidad" class="w-full h-8 border border-customLightBlue rounded-md px-2 text-zinc-700" [(ngModel)]="especialidad">
+                            <option value="elige" disabled selected >Elige una opción</option>
+                            <option value="clinico">Clinico</option>
+                            <option value="traumatologia">Traumatología</option>
+                            <option value="pediatria">Pediatría</option>
+                            <option value="dermatologia">Dermatología</option>
+                            <option value="cardiologia">Cardiología</option>
+                            <option value="oftalmologia">Oftalmología</option>
+                            <option value="otra">Otra</option>
+                        </select>
+                    </div>
+
+                    <div *ngIf="especialidad == 'otra'">
+                        <label for="especialidad" class="text-customLightBlue font-medium text-sm">Otra Especialidad</label>
+                        <input type="especialidad" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="otraEspecialidad">
+                    </div>
+
+                </div>
+
+                <div>
+                    <label for="email" class="text-customLightBlue font-medium text-sm">Correo electrónico</label>
+                    <input type="email" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="emailAAgregar">
+                </div>
+                <div>
+                    <label for="password" class="text-customLightBlue font-medium text-sm">Contraseña</label>
+                    <input type="password" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="password">
+                </div>
+                <div class="flex flex-col">
+                    <label for="imagen" class="text-customLightBlue font-medium text-sm">Elige una imagen de perfil:</label>
+                    <label for="imagen" class="h-8 w-32 px-2 py-1 bg-customLightBlue rounded-md text-white flex justify-center hover:bg-white hover:text-customLightBlue transition-colors cursor-pointer">Sube tu foto</label>
+
+                        <input *ngIf="!foto1" (change)="onFileSelected($event, 'foto1')" type="file" id="imagen" name="imagen" accept="image/*" class="h-8 hidden">
+
+                        <div *ngIf="foto1" class="flex flex-row">
+                            <input (change)="onFileSelected($event, 'foto1')" type="file" id="imagen" name="imagen" accept="image/*" class="h-8 hidden">
+                            <p class="text-green-700 font-medium text-xs">Imagen subida con exito!</p>
+                        </div>
+                </div>
+
+
+                <div *ngIf=" userType == 'paciente'" class="flex flex-col">
+                    <label for="imagen2" class="text-customLightBlue font-medium text-sm">Elige una segunda imagen de perfil:</label>
+                    <label for="imagen2" class="h-8 w-32 px-2 py-1 bg-customLightBlue rounded-md text-white flex justify-center hover:bg-white hover:text-customLightBlue transition-colors cursor-pointer">Sube tu foto</label>
+
+                        <input *ngIf="!foto2" (change)="onFileSelected($event, 'foto2')" type="file" id="imagen2" name="imagen2" accept="image/*" class="h-8 hidden">
+
+                        <div *ngIf="foto2" class="flex flex-row">
+                            <input (change)="onFileSelected($event, 'foto2')" type="file" id="imagen2" name="imagen2" accept="image/*" class="h-8 hidden">
+                            <p class="text-green-700 font-medium text-xs">Imagen subida con exito!</p>
+                        </div>
+                </div>
+                
+                <div class="mt-auto pb-6 pt-3">
+                    <button (click)="register()" class="w-full h-10 rounded-md bg-customLightBlue text-white font-medium hover:bg-customBlue transition-colors">Registrate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="h-auto w-full flex flex-col bg-slate-200">
+        <div class="h-12 min-h-12 w-full flex flex-row">
+            <div
+                class="h-full w-full flex flex-1 justify-center items-center"
+                [class.border-l-2]="verUsuariosTipo === 'especialista'"
+                [class.border-b-2]="verUsuariosTipo === 'especialista'"
+                [class.border-customDarkBlue]="verUsuariosTipo === 'especialista'"
+                [class.rounded-bl-md]="verUsuariosTipo === 'especialista'"
+                [class.cursor-pointer]="verUsuariosTipo !== 'paciente'"
+                [class.bg-slate-300]="verUsuariosTipo === 'especialista'"
+                (click)="verUsuariosTipo = 'paciente'"
+            >
+                <p class="text-xl font-bold text-customDarkBlue">Pacientes</p>
+            </div>
+            <div
+                class="h-full w-full flex flex-1 justify-center items-center"
+                [class.border-r-2]="verUsuariosTipo === 'paciente'"
+                [class.border-b-2]="verUsuariosTipo === 'paciente'"
+                [class.border-customDarkBlue]="verUsuariosTipo === 'paciente'"
+                [class.rounded-br-md]="verUsuariosTipo === 'paciente'"
+                [class.cursor-pointer]="verUsuariosTipo !== 'especialista'"
+                [class.bg-slate-300]="verUsuariosTipo === 'paciente'"
+                (click)="verUsuariosTipo = 'especialista'"
+            >
+                <p class="text-xl font-bold text-customDarkBlue">Especialistas</p>
+            </div>
+        </div>
+
+        <div class="h-auto w-full flex justify-center items-center py-16">
+            <div class="min-h-[90%] w-[95%] grid grid-cols-4 justify-center gap-5 items-center px-6 rounded-md">
+                <!-- Pacientes -->
+            <ng-container *ngIf="verUsuariosTipo === 'paciente'">
+                <div
+                  *ngFor="let item of usuariosPaciente; trackBy: trackByFn"
+                    class="group w-[100%] h-64 flex justify-center items-center gap-2 px-4 py-4 flex-col bg-white shadow-2xl rounded-md cursor-pointer text-customDarkBlue hover:bg-customDarkBlue hover:text-white hover:h-72 hover:justify-center hover:scale-95 hover:shadow-sm transition-all duration-300"
+                    (click)="downloadUserPDF(item)"
+                >
+                    <div>
+                        <img
+                            [src]="item.foto1"
+                            alt=""
+                            class="h-20 w-20 group-hover:scale-105 transition-all duration-300 object-cover object-center rounded-full"
+                        />
+                    </div>
+                    <div>
+                        <p class="text-base text-center font-bold">
+                        {{ item.name + ' ' + item.lastname }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-center font-medium">{{ item.dni }}</p>
+                    </div>
+                    <div class="flex flex-row gap-2">
+                        <p class="text-sm text-center font-medium">Edad: {{ item.edad }}</p>
+                        <p class="text-sm text-center font-medium">|</p>
+                        <p class="text-sm text-center font-medium">{{ item.obrasocial }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-center">{{ item.email }}</p>
+                    </div>
+                    <div class="group-hover:block hidden mt-4 transition-all duration-300">
+                        <p class="text-white font-bold text-sm text-center">
+                        Descargar turnos
+                        </p>
+                    </div>
+                </div>
+            </ng-container>
+
+                <!-- Especialistas -->
+              <ng-container *ngIf="verUsuariosTipo === 'especialista'">
+                <div
+                    *ngFor="let item of usuariosEspecialista; trackBy: trackByFn"
+                    class="group w-[100%] h-[290px] flex justify-center items-center gap-2 px-4 py-4 flex-col bg-white shadow-2xl rounded-md cursor-pointer text-customDarkBlue hover:bg-customDarkBlue hover:text-white hover:scale-95 hover:shadow-sm transition-all duration-300"
+                >
+                <div>
+                    <img
+                        [src]="item.foto1"
+                        alt=""
+                        class="h-20 w-20 group-hover:scale-105 transition-all duration-300 object-cover object-center rounded-full"
+                    />
+                    </div>
+                    <div>
+                        <p class="text-base text-center font-bold">
+                        {{ item.name + ' ' + item.lastname }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-center font-medium">{{ item.dni }}</p>
+                    </div>
+                    <div class="flex flex-row gap-2">
+                        <p class="text-sm text-center font-medium">Edad: {{ item.edad }}</p>
+                        <p class="text-sm text-center font-medium">|</p>
+                        <p class="text-sm text-center font-medium">{{ item.especialidad }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-center">{{ item.email }}</p>
+                    </div>
+                    <div class="pt-3">
+                        <div class="flex justify-center">
+                        <label class="switch">
+                            <input
+                            type="checkbox"
+                            (change)="manejarAccionesEspecialista(item)"
+                            [checked]="item.aceptadoPorAdmin"
+                            />
+                            <div class="slider">
+                                <div class="circle">
+                                    <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                        <g>
+                                            <path data-original="#000000" fill="currentColor" d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"></path>
+                                        </g>
+                                    </svg>
+                                    <svg class="checkmark" xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0" height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                        <g>
+                                            <path class="" data-original="#000000" fill="currentColor" d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </label>
+                        </div>
+                    </div>
+                </div>
+                </ng-container>
+            </div>
+        </div>
+
+
+        <div (click)="ver()" class="group h-12 w-12 rounded-full absolute left-0 bottom-0 m-4 bg-customBlue text-white flex flex-row gap-2 justify-center items-center shadow-2xl overflow-hidden cursor-pointer hover:w-44 hover:scale-95 hover:bg-customDarkBlue transition-all">
+            <p class="font-black text-5xl group-hover:hidden transition-all duration-300">+</p>
+            <p class="hidden font-black text- group-hover:block transition-all duration-300">Ver</p>
+        </div> 
+
+    </div>
+
+

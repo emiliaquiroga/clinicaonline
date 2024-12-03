@@ -1,0 +1,80 @@
+
+<div class="min-h-screen w-screen flex flex-col overflow-x-hidden">
+    <div class="h-16 min-h-16 w-full flex flex-row items-center justify-between px-6 bg-customDarkBlue z-50">
+        <div class="h-full flex flex-1 items-center flex-row gap-4">
+            <img src="/src/assets/clinica.png" alt="" class="h-7 w-7">
+            <h1 class="text-slate-100 font-bold text-xl">Clinica</h1>
+        </div>
+        <div class="w-full h-full flex flex-1 items-center justify-end flex-row gap-12">
+            <button routerLink="/home" class="group h-8 w-24 rounded-full font-semibold bg-slate-100 text-customDarkBlue flex flex-row gap-1 justify-center items-center shadow-2xl hover:bg-customBlue hover:text-slate-100 transition-colors">
+                <img src="/src/assets/home-azul.png" class="h-4 w-4 block group-hover:hidden" >
+                <img src="/src/assets/home.png" class="hidden h-4 w-4 group-hover:block" >
+                <p class="text-sm font-semibold mt-px">Home</p>
+            </button>
+            <button (click)="irAPerfil()" class="rounded-full flex justify-center items-center shadow-2xl pr-6">
+                <img src={{user.foto1}} alt="" class="h-10 w-10 rounded-full absolute">
+            </button>
+        </div>
+        <div class="h-full w-12 flex justify-center items-center -ml-3">
+            <img (click)="toggleCerrandoSesion()" src="/src/assets/volver.png" alt="" class="h-3 w-3 -rotate-90 cursor-pointer">
+        </div>
+    </div>
+
+    <div *ngIf="cerrandoSesion" class="w-full flex justify-end">
+        <div (click)="cerrarSesion()" class="w-32 h-10 rounded-md flex justify-center items-center flex-row gap-1.5 cursor-pointer mr-[2%] mt-1 bg-red-600 hover:bg-red-800 transition-all">
+            <img src="/src/assets/volver.png" alt="" class="h-4 w-4 cursor-pointer">
+            <p class="text-sm font-medium text-white whitespace-nowrap">Cerrar Sesión</p>
+        </div>
+    </div>
+    
+    <div class=" h-full w-full flex flex-col items-center justify-start bg-slate-200 gap-5 px-12 pb-12 pt-20">
+        <p class="text-customDarkBlue font-bold text-xl">Ver la historia clinica del paciente {{getNombreDelPaciente(pacienteDni)}}</p>
+        <div class="w-[600px] h-auto rounded-md bg-white shadow-md flex flex-col items-center px-5 py-10 gap-5 mt-5">
+            <ng-container *ngIf="historiaClinica.length > 0; else historiaVacia">
+                <div *ngFor="let item of historiaClinica; let index = index" class="w-full h-auto flex flex-col items-center justify-start gap-3">
+                    <p class="font-bold text-lg text-white bg-customDarkBlue rounded-md w-full py-2 text-center">
+                        Registro {{historiaClinica.length - index}}
+                    </p>
+                    <div class="flex flex-row gap-1.5">
+                        <p class="font-medium text-lg text-customDarkBlue">Especialista encargado:</p>
+                        <p class="font-semibold text-lg text-customDarkBlue">{{ getNombreDelEspecialista(item.especialistaDni) }}</p>
+                    </div>
+                    <p class="font-semibold text-lg text-customDarkBlue">Datos de la fecha <b>{{ item.fecha }}</b></p>
+                    <div class="flex flex-row gap-1.5 mt-4">
+                        <p class="font-medium text-lg text-customDarkBlue">Peso:</p>
+                        <p class="font-semibold text-lg text-customDarkBlue">{{ item.peso }}</p>
+                    </div>
+                    <div class="flex flex-row gap-1.5">
+                        <p class="font-medium text-lg text-customDarkBlue">Altura:</p>
+                        <p class="font-semibold text-lg text-customDarkBlue">{{ item.altura }}</p>
+                    </div>
+                    <div class="flex flex-row gap-1.5">
+                        <p class="font-medium text-lg text-customDarkBlue">Temperatura:</p>
+                        <p class="font-semibold text-lg text-customDarkBlue">{{ item.temperatura }}</p>
+                    </div>
+                    <div class="flex flex-row gap-1.5">
+                        <p class="font-medium text-lg text-customDarkBlue">Presión:</p>
+                        <p class="font-semibold text-lg text-customDarkBlue">{{ item.presion }}</p>
+                    </div>
+                    <ng-container *ngIf="item.datosDinamicos && getObjectKeys(item.datosDinamicos).length > 0; else sinDatosDinamicos">
+                        <div *ngFor="let clave of getObjectKeys(item.datosDinamicos)" class="flex flex-row gap-1.5">
+                            <p class="font-medium text-lg text-customDarkBlue">{{ clave.toUpperCase() }}:</p>
+                            <p class="font-semibold text-lg text-customDarkBlue">{{ item.datosDinamicos | dynamicProperty:clave }}</p>
+                        </div>
+                    </ng-container>
+                    <ng-template #sinDatosDinamicos>
+                        <p>No hay datos dinámicos para este registro.</p>
+                    </ng-template>
+                    <div class="h-px w-full bg-zinc-700"></div>
+                </div>
+            </ng-container>
+            <ng-template #historiaVacia>
+                <div class="w-full h-auto flex flex-col items-center justify-start gap-3">
+                    <p class="font-medium text-lg text-customDarkBlue">Tu historia clínica está vacía :/</p>
+                </div>
+            </ng-template>
+        </div>
+        
+    </div>
+</div>
+

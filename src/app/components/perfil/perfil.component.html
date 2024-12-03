@@ -1,0 +1,89 @@
+
+<div class="h-screen w-screen flex flex-col overflow-x-hidden">
+    <div class="h-16 min-h-16 w-full flex flex-row items-center justify-between px-6 bg-customDarkBlue z-50">
+        <div class="h-full flex flex-1 items-center flex-row gap-4">
+            <img src="/assets/clinica.png" alt="" class="h-7 w-7">
+            <h1 class="text-slate-100 font-bold text-xl">Clinica</h1>
+        </div>
+        <div class="w-full h-full flex flex-1 items-center justify-end flex-row gap-12">
+            <button routerLink="/home" class="group h-8 w-24 rounded-full font-semibold bg-slate-100 text-customDarkBlue flex flex-row gap-1 justify-center items-center shadow-2xl hover:bg-customBlue hover:text-slate-100 transition-colors">
+                <img src="/assets/home-azul.png" class="h-4 w-4 block group-hover:hidden" >
+                <img src="/assets/home.png" class="hidden h-4 w-4 group-hover:block" >
+                <p class="text-sm font-semibold mt-px">Home</p>
+            </button>
+            <button routerLink="/perfil" class="rounded-full flex justify-center items-center shadow-2xl pr-6">
+                <img src={{user.foto1}} alt="" class="h-10 w-10 rounded-full  sticky">
+            </button>
+        </div>
+        <div class="h-full w-12 flex justify-center items-center -ml-3">
+            <img (click)="toggleCerrandoSesion()" src="/assets/volver.png" alt="" class="h-3 w-3 -rotate-90 cursor-pointer">
+        </div>
+    </div>
+    <div *ngIf="cerrandoSesion" class="w-full flex justify-end">
+        <div (click)="cerrarSesion()" class="w-32 h-10 rounded-md flex justify-center items-center flex-row gap-1.5 cursor-pointer mr-[2%] mt-1 bg-red-600 hover:bg-red-800 transition-all">
+            <img src="/assets/volver.png" alt="" class="h-4 w-4 cursor-pointer">
+            <p class="text-sm font-medium text-white whitespace-nowrap">Cerrar Sesión</p>
+        </div>
+    </div>
+    
+    <div class="h-full w-full flex flex-col bg-slate-200">
+        <div class="h-full w-full flex justify-center items-center flex-row">
+            <div class="w-full h-full flex items-center justify-start flex-col p-8 gap-8">
+                <div class="flex flex-col items-center justify-start gap-7 bg-white py-8 px-20 rounded-md">
+                    <p class="text-customDarkBlue font-bold text-3xl">Mi perfil</p>
+                    <div class="flex flex-col gap-4 items-start">
+                        <div class="mt-5 flex flex-row gap-1.5 justify-center items-center">
+                            <p class="text-lg font-medium text-customDarkBlue">Nombre:</p>
+                            <p class="text-lg font-bold text-customDarkBlue">{{user.name + " " + user.lastname}}</p>
+                        </div>
+                        <div class="flex flex-row gap-1.5 justify-center items-center">
+                            <p class="text-lg font-medium text-customDarkBlue">Edad:</p>
+                            <p class="text-lg font-bold text-customDarkBlue">{{user.edad}}</p>
+                        </div>
+                        <div class="flex flex-row gap-1.5 justify-center items-center">
+                            <p class="text-lg font-medium text-customDarkBlue">DNI:</p>
+                            <p class="text-lg font-bold text-customDarkBlue">{{user.dni}}</p>
+                        </div>
+                        <div *ngIf="user.type == 'especialista'" class="flex flex-row gap-1.5 justify-center items-center">
+                            <p class="text-lg font-medium text-customDarkBlue">Especialidades:</p>
+                            <p class="text-lg font-bold text-customDarkBlue">{{user.especialidad}}</p>
+                        </div>
+                        <div *ngIf="user.type !== 'especialista'">
+                            <div class="flex flex-row gap-1.5 justify-center items-center">
+                                <p class="text-lg font-medium text-customDarkBlue">Obra Social:</p>
+                                <p class="text-lg font-bold text-customDarkBlue">{{user.obrasocial}}</p>
+                            </div>
+                            <div class="flex justify-center w-full">
+                                <button (click)="irAHistoriaClinico()" class="bg-customDarkBlue px-5 py-2.5 flex justify-center items-center rounded-md shadow-lg text-white font-semibold hover:shadow-none hover:bg-customLightBlue hover:scale-95 transition-all duration-300">Ver historia clinica</button>
+                            </div>
+                            <div class="flex justify-center w-full">
+                                <button (click)="generatePDF()" class="bg-customDarkBlue px-5 py-2.5 flex justify-center items-center rounded-md shadow-lg text-white font-semibold hover:shadow-none hover:bg-customLightBlue hover:scale-95 transition-all duration-300">Descargar historia clinica</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full h-full flex items-center justify-start flex-col py-8 pr-8 gap-4">
+                <div class="flex flex-row items-start justify-center gap-6 p-6 bg-white rounded-md">
+                    <img src={{user.foto1}} alt="" class="rounded-md h-52 w-52">
+                    @if(user.type == 'paciente' || user.type == 'admin') {
+                        <img src={{user.foto2}} alt="" class="rounded-md h-52 w-52">
+                    }
+                </div>
+                <div class="flex flex-col items-start justify-center gap-6 p-6 bg-white rounded-md">
+                    <p class="text-customDarkBlue font-bold text-base">Descargar turnos de una especialidad en concreto:</p>
+                    <select [(ngModel)]="especialidadElegida" name="especialidades" id="especialidades" 
+                    class="w-full h-9 rounded-md border-2 border-customDarkBlue font-medium text-customDarkBlue px-2">
+                        <option value="" disabled selected>Elije una de tus especialidades</option>
+                        <option *ngFor="let item of especialidades; index as i" [value]="item">{{ item }}</option>
+                    </select>
+
+                    <button *ngIf="especialidadElegida !=''" (click)="downloadUserPDF(especialidadElegida)" 
+                    class="w-full h-9 rounded-md bg-customDarkBlue text-white font-semibold flex justify-center items-center">Descargar turnos de {{especialidadElegida}}</button>
+                    <button *ngIf="especialidadElegida ==''" 
+                    disabled class="w-full h-9 rounded-md bg-zinc-600 text-white font-semibold flex justify-center items-center">Elije una especialidad</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

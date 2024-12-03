@@ -1,0 +1,92 @@
+
+<div class="min-h-screen w-screen flex flex-col overflow-x-hidden">
+    <div class="h-16 min-h-16 w-full flex flex-row items-center justify-between px-6 bg-customDarkBlue z-50">
+        <div class="h-full flex flex-1 items-center flex-row gap-4">
+            <img src="/assets/clinica.png" alt="" class="h-7 w-7">
+            <h1 class="text-slate-100 font-bold text-xl">Clinica</h1>
+        </div>
+        <div class="w-full h-full flex flex-1 items-center justify-end flex-row gap-12">
+            <button routerLink="/home" class="group h-8 w-24 rounded-full font-semibold bg-slate-100 text-customDarkBlue flex flex-row gap-1 justify-center items-center shadow-2xl hover:bg-customBlue hover:text-slate-100 transition-colors">
+                <img src="/assets/home-azul.png" class="h-4 w-4 block group-hover:hidden" >
+                <img src="/assets/home.png" class="hidden h-4 w-4 group-hover:block" >
+                <p class="text-sm font-semibold mt-px">Home</p>
+            </button>
+            <button routerLink="/perfil" class="rounded-full flex justify-center items-center shadow-2xl pr-6">
+                <img src={{user.foto1}} alt="" class="h-10 w-10 rounded-full absolute">
+            </button>
+        </div>
+        <div class="h-full w-12 flex justify-center items-center -ml-3">
+            <img (click)="toggleCerrandoSesion()" src="/assets/volver.png" alt="" class="h-3 w-3 -rotate-90 cursor-pointer">
+        </div>
+    </div>
+    <div *ngIf="cerrandoSesion" class="w-full flex justify-end">
+        <div (click)="cerrarSesion()" class="w-32 h-10 rounded-md flex justify-center items-center flex-row gap-1.5 cursor-pointer mr-[2%] mt-1 bg-red-600 hover:bg-red-800 transition-all">
+            <img src="/assets/volver.png" alt="" class="h-4 w-4 cursor-pointer">
+            <p class="text-sm font-medium text-white whitespace-nowrap">Cerrar Sesión</p>
+        </div>
+    </div>
+    
+    <div class="h-full w-full flex flex-col items-center justify-start bg-slate-200 gap-5 p-12">
+        <p class="text-customDarkBlue font-bold text-xl">Agregar a la historia clinica del paciente {{getNombreDelPaciente(pacienteDni)}}</p>
+        <p class="text-customDarkBlue font-bold text-xl">Fecha: {{fechaFormateada}}</p>
+        <div class="w-[600px] h-auto rounded-md bg-white shadow-md flex flex-col items-center px-5 py-10 gap-5 mt-5">
+            <p class="text-lg text-customDarkBlue font-bold">Datos obligatorios</p>
+            <div class="flex flex-row gap-5">
+                <div class="flex flex-col">
+                    <label for="altura" class="text-base text-customDarkBlue font-semibold">Altura</label>
+                    <input [(ngModel)]="altura" type="number" name="altura" id="altura" placeholder="Altura en centimetros" class=" p-2 rounded-md border-2 border-customDarkBlue">
+                </div>
+                <div class="flex flex-col">
+                    <label for="peso" class="text-base text-customDarkBlue font-semibold">Peso</label>
+                    <input [(ngModel)]="peso" type="number" name="peso" id="peso" placeholder="Peso en kilogramos" class=" p-2 rounded-md border-2 border-customDarkBlue">
+                </div>
+            </div>
+            <div class="flex flex-row gap-5">
+                <div class="flex flex-col">
+                    <label for="temperatura" class="text-base text-customDarkBlue font-semibold">Temperatura</label>
+                    <input [(ngModel)]="temperatura" type="number" name="temperatura" id="temperatura" placeholder="Temperatura en centigrados" class=" p-2 rounded-md border-2 border-customDarkBlue">
+                </div>
+                <div class="flex flex-col">
+                    <label for="presion" class="text-base text-customDarkBlue font-semibold">Presion</label>
+                    <input [(ngModel)]="presion" type="text" name="presion" id="presion" placeholder="Presion en mm Hg" class=" p-2 rounded-md border-2 border-customDarkBlue">
+                </div>
+            </div>
+            <div class="w-3/4 h-px bg-zinc-600"></div>
+            <p class="text-lg text-customDarkBlue font-bold">Datos opcionales</p>
+            <div class="flex flex-row gap-5">
+                <div class="flex flex-col">
+                    <label for="key1" class="text-base text-customDarkBlue font-semibold">Dato personalizado</label>
+                    <input [(ngModel)]="key1" type="text" name="key1" id="key1" placeholder="Ingrese el dato a guardar" class=" p-2 rounded-md border-2 border-customDarkBlue">
+                </div>
+                <div class="flex flex-col">
+                    <label for="valor1" class="text-base text-customDarkBlue font-semibold">Valor del dato</label>
+                    <input [(ngModel)]="valor1" type="text" name="valor1" id="valor1" placeholder="Ingrese el valor del dato a guardar" class=" p-2 rounded-md border-2 border-customDarkBlue">
+                </div>
+            </div>
+            <div class="flex flex-row gap-5" *ngIf="key1 != '' && valor1 != ''">
+                <div class="flex flex-col">
+                    <label for="key2" class="text-base text-customDarkBlue font-semibold">Dato personalizado</label>
+                    <input [(ngModel)]="key2" type="text" name="key2" id="key2" placeholder="Ingrese el dato a guardar" class="p-2 rounded-md border-2 border-customDarkBlue">
+                </div>
+                <div class="flex flex-col">
+                    <label for="valor2" class="text-base text-customDarkBlue font-semibold">Valor del dato</label>
+                    <input [(ngModel)]="valor2" type="text" name="valor2" id="valor2" placeholder="Ingrese el valor del dato a guardar" class="p-2 rounded-md border-2 border-customDarkBlue">
+                </div>
+            </div>
+            <div class="flex flex-row gap-5" *ngIf="key2 != '' && valor2 != ''">
+                <div class="flex flex-col">
+                    <label for="key3" class="text-base text-customDarkBlue font-semibold">Dato personalizado</label>
+                    <input [(ngModel)]="key3" type="text" name="key3" id="key3" placeholder="Ingrese el dato a guardar" class="p-2 rounded-md border-2 border-customDarkBlue">
+                </div>
+                <div class="flex flex-col">
+                    <label for="valor3" class="text-base text-customDarkBlue font-semibold">Valor del dato</label>
+                    <input [(ngModel)]="valor3" type="text" name="valor3" id="valor3" placeholder="Ingrese el valor del dato a guardar" class="p-2 rounded-md border-2 border-customDarkBlue">
+                </div>
+            </div>
+            
+            <button (click)="agregarAHistoriaClinica()" class="text-white font-bold flex justify-center items-center w-3/4 h-12 rounded-md bg-customDarkBlue hover:bg-customBlue transition-all">
+                Subir
+            </button>
+        </div>
+    </div>
+</div>

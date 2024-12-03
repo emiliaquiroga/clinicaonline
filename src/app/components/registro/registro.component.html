@@ -1,0 +1,160 @@
+<div class="h-screen w-screen flex justify-center items-center bg-[url(/assets/medicos/3.jpg)] bg-cover overflow-hidden">
+    <div class="h-full w-full flex justify-center items-center bg-customLightBlue/60">
+        <div class="w-3/4 p-6 md:pl-8 flex flex-col items-center md:flex-row rounded-md gap-6 bg-white/50">
+            <div class="h-full flex flex-col items-center md:items-stretch justify-center gap-6">
+                <div class="flex flex-row gap-3">
+                    <img src="/assets/clinica_dark.png" alt="" class="h-9 w-9 hidden md:block drop-shadow-sm">
+                    <img src="/assets/clinica_dark.png" alt="" class="h-7 w-7 block md:hidden drop-shadow-sm">
+                    <h1 class="text-customDarkBlue font-bold text-2xl md:text-4xl drop-shadow-sm">Regístrate</h1>
+                </div>
+                <p class="text-customDarkBlue font-medium text-sm md:text-lg text-center md:text-start drop-shadow-sm">Completa tus datos para poder acceder a la plataforma</p>
+                <div class="justify-center items-center hidden md:flex">
+                    <img src="/assets/signup.svg" alt="" class="h-72 w-72 drop-shadow-sm">
+                </div>
+                <div class="justify-center flex-row gap-1.5 hidden md:flex">
+                    <p class="text-black text-sm md:text-base drop-shadow-sm">¿Ya tienes una cuenta?</p>
+                    <p routerLink="login" class="text-sm md:text-base text-customLightBlue cursor-pointer underline drop-shadow-sm hover:text-customDarkBlue transition-colors">Inicia sesión</p>
+                </div>
+            </div>
+
+                <div *ngIf="userType != '' " class="w-[98%] md:w-[420px] h-[470px] flex flex-col bg-slate-100 rounded-md shadow-2xl overflow-y-auto">
+                    <div class="h-full w-full flex flex-col rounded-md gap-4 py-5 px-10">
+                        <div class="flex flex-row gap-4">
+                            <div class="flex flex-col">
+                                <label for="name" class="text-customLightBlue font-medium text-sm">Nombre</label>
+                                <input id="name" type="text" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="name">
+                            </div>
+                            <div class="flex flex-col">
+                                <label for="lastname" class="text-customLightBlue font-medium text-sm">Apellido</label>
+                                <input id="lastname" type="text" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="lastname">
+                            </div>
+                        </div>
+    
+                        <div class="flex flex-row gap-4">
+                            <div class="w-1/4 flex flex-col">
+                                <label for="edad" class="text-customLightBlue font-medium text-sm">Edad</label>
+                                <input id="edad" type="number" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="edad">
+                            </div>
+                            <div class="w-3/4 flex flex-col">
+                                <label for="dni" class="text-customLightBlue font-medium text-sm">DNI</label>
+                                <input id="dni" type="number" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="dni">
+                            </div>
+                        </div>
+                        <div *ngIf="userType == 'paciente'">
+                            <label for="obrasocial" class="text-customLightBlue font-medium text-sm">Obra social</label>
+                            <input type="obrasocial" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="obrasocial">
+                        </div>
+                        <div *ngIf="userType == 'especialista'" class="flex flex-col">
+                            <label for="listaespecialidad" class="text-customLightBlue font-medium text-sm">Especialidad</label>
+                            <select name="listaespecialidad" id="listaespecialidad" class="w-full h-8 border border-customLightBlue rounded-md px-2 text-zinc-700" [(ngModel)]="especialidad">
+                                <option value="elige" disabled selected >Elige una opción</option>
+                                <option value="Clinico">Clinico</option>
+                                <option value="Traumatologia">Traumatología</option>
+                                <option value="Pediatria">Pediatría</option>
+                                <option value="Dermatologia">Dermatología</option>
+                                <option value="Cardiologia">Cardiología</option>
+                                <option value="Oftalmologia">Oftalmología</option>
+                                <option value="otra">Otra</option>
+                            </select>
+                        </div>
+<!--                         <div *ngIf="especialidad == 'otra'">
+                            <label for="especialidad" class="text-customLightBlue font-medium text-sm">Otra Especialidad</label>
+                            <input type="especialidad" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="otraEspecialidad">
+                        </div> -->
+                            
+                        
+                        <div>
+                            <label for="email" class="text-customLightBlue font-medium text-sm">Correo electrónico</label>
+                            <input type="email" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="email">
+                        </div>
+                        <div>
+                            <label for="password" class="text-customLightBlue font-medium text-sm">Contraseña</label>
+                            <input type="password" class="w-full h-8 border border-customLightBlue focus: rounded-md px-2" [(ngModel)]="password">
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="imagen" class="text-customLightBlue font-medium text-sm">Elige una imagen de perfil:</label>
+                            <label for="imagen" class="h-8 w-32 px-2 py-1 bg-customLightBlue rounded-md text-white flex justify-center hover:bg-white hover:text-customLightBlue transition-colors cursor-pointer">Sube tu foto</label>
+                                <input *ngIf="!foto1" (change)="onFileSelected($event, 'foto1')" type="file" id="imagen" name="imagen" accept="image/*" class="h-8 hidden">
+                                
+                                <div *ngIf="foto1" class="flex flex-row">
+                                    <input (change)="onFileSelected($event, 'foto1')" type="file" id="imagen" name="imagen" accept="image/*" class="h-8 hidden">
+                                    <p class="text-green-700 font-medium text-xs">Imagen subida con exito!</p>
+                                </div>
+                            
+                        </div>
+
+                        <div *ngIf="userType == 'paciente'" class="flex flex-col">
+                            <label for="imagen2" class="text-customLightBlue font-medium text-sm">Elige una segunda imagen de perfil:</label>
+                            <label for="imagen2" class="h-8 w-32 px-2 py-1 bg-customLightBlue rounded-md text-white flex justify-center hover:bg-white hover:text-customLightBlue transition-colors cursor-pointer">Sube tu foto</label>
+
+                                <input *ngIf="!foto2" (change)="onFileSelected($event, 'foto2')" type="file" id="imagen2" name="imagen2" accept="image/*" class="h-8 hidden">
+
+                                <div *ngIf="foto2" class="flex flex-row">
+                                    <input (change)="onFileSelected($event, 'foto2')" type="file" id="imagen2" name="imagen2" accept="image/*" class="h-8 hidden">
+                                    <p class="text-green-700 font-medium text-xs">Imagen subida con exito!</p>
+                                </div>
+                            
+                        </div>
+
+                <div class="w-full px-2 py-5 flex items-center justify-center flex-col gap-3 rounded-md shadow-md bg-white">
+                    <ng-container *ngIf="!captchaCorrecto; else correctCaptcha">
+                        <ng-container *ngIf="mensaje !== 'ERROR!'; else errorState">
+                            <p class="text-customDarkBlue font-black text-xl">CAPTCHA</p>
+                            <p class="text-customDarkBlue text-xs font-semibold text-center">{{mensaje}}</p>
+                            <p class="text-red600 text-xs font-semibold text-center">{{random1}} + {{ranodm2}}</p>
+                            <input type="number" name="res" id="res" [(ngModel)]="resultado" class="border-2 border-customDarkBlue rounded-md">
+                            <button (click)="captchaEnviado()" class="px-4 py-2 text-xs text-white bg-customDarkBlue font-bold rounded-md shadow-md">Enviar</button>
+                        </ng-container>
+
+                        <ng-template #errorState>
+                            <p class="text-customDarkBlue font-black text-xl">CAPTCHA</p>
+                            <p class="text-red-600 text-xs font-bold text-center">{{mensaje}}</p>
+                            <input disabled="" type="number" name="res" id="res" [(ngModel)]="resultado" class="border-2 border-customDarkBlue rounded-md">
+                            <button disabled (click)="captchaEnviado()" class="px-4 py-2 text-xs text-white bg-zinc-700 font-bold rounded-md shadow-md">Enviar</button>
+                        </ng-template>
+                    </ng-container>
+
+                    <ng-template #correctCaptcha>
+                        <p class="text-customDarkBlue font-black text-xl">CAPTCHA</p>
+                        <img src="/assets/correcto.png" alt="" class="h-10 w-10">
+                        <p class="text-customDarkBlue font-semibold text-xl">Correcto</p>
+                    </ng-template>
+                </div>
+                <div class="mt-auto pb-6 pt-3">
+                    <button (click)="register()" class="w-full h-10 rounded-md bg-customLightBlue text-white font-medium hover:bg-customBlue transition-colors">Registrate</button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="userType == ''" class="w-[98%] md:w-[420px] h-[470px] flex flex-col gap-2 pt-2 pb-4 px-4 bg-slate-100 rounded-lg shadow-2xl overflow-y-auto">
+            <div class="h-6 flex flex-row items-center justify-center gap-3">
+                <p class="text-sm text-customDarkBlue font-medium">Deseas registrarte como</p>
+            </div>
+            <div (click)="userType = 'especialista'" class="h-full w-full flex justify-center items-center flex-col gap-2 bg-white shadow-sm rounded-md cursor-pointer hover:shadow-xl transition-all duration-300">
+                <img src="/src/assets/doctores.svg" alt="" class="h-24 w-24 drop-shadow-sm">
+                <p class="text-lg font-semibold text-customLightBlue drop-shadow-sm">Especialista</p>
+            </div>
+            <div class="h-4 flex flex-row items-center justify-center gap-3">
+                <div class="h-px w-full bg-zinc-700"></div>
+                <p class="text-sm text-customDarkBlue">O</p>
+                <div class="h-px w-full bg-zinc-700"></div>
+            </div>
+            <div (click)="userType = 'paciente'" class="h-full w-full flex justify-center items-center flex-col gap-2 bg-white shadow-sm rounded-md cursor-pointer hover:shadow-xl transition-all duration-300">
+                <img src="/src/assets/pacientes.svg" alt="" class="h-24 w-24 drop-shadow-sm">
+                <p class="text-lg font-semibold text-customLightBlue drop-shadow-sm">Paciente</p>
+            </div>
+        </div>
+
+            <div class="justify-center flex-row gap-1.5 flex md:hidden">
+                <p class="text-black text-sm md:text-base">¿Ya tienes una cuenta?</p>
+                <p routerLink="login" class="text-sm md:text-base text-customLightBlue cursor-pointer underline hover:text-customDarkBlue transition-colors">Inicia sesión</p>
+            </div>
+        </div>
+    </div>
+
+    <div routerLink="/bienvenida" class="group absolute left-0 bottom-0 h-10 w-[104px] bg-customDarkBlue rounded-md ml-7 md:ml-20 mb-4 md:mb-7 flex justify-center items-center gap-2 cursor-pointer hover:bg-slate-100 hover:rounded-full transition-all duration-200">
+        <img src="/assets/volver.png" alt="" class="block group-hover:hidden w-4 h-4 transition-all duration-200">
+        <img src="/assets/volver2.png" alt="" class=" hidden group-hover:block w-4 h-4 transition-all duration-200">
+        <p class="text-white font-semibold group-hover:text-customLightBlue transition-colors duration-200">Volver</p>
+    </div>
+</div>

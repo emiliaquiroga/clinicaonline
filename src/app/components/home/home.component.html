@@ -1,0 +1,953 @@
+<!-- @if (spinner) {
+    <div class="absolute w-screen h-screen backdrop-blur-md felx justify-center items-center">
+        <app-spinner></app-spinner>
+    </div>
+} -->
+
+<div *ngIf="cancelandoTurno" class="absolute h-screen w-screen z-[100] flex justify-center items-center backdrop-blur-2xl">
+    <div class="h-96 w-96 flex flex-col justify-center items-center gap-5 bg-slate-100 rounded-md px-10 py-5">
+        <p class="text-xl font-bold text-red-600 text-center">Cancelar turno del dia {{turnoACancelar.dia}} a las {{turnoACancelar.hora}}</p>
+        <p class="text-customDarkBlue text-base font-medium text-center">Cuentanos la razon de tu cancelación</p>
+        <textarea type="text" placeholder="Razon de cancelación" [(ngModel)]="razonDeCancelacion" class="h-11 w-[95%] bg-white rounded-md p-2"></textarea>
+        <div class="flex flex-row justify-center gap-3">
+            @if (razonDeCancelacion != "") {
+                @if(user.type == "especialista") {
+                    <button (click)="especialistaCancelaTurno(true)" class="bg-red-600 p-3 text-white rounded-md font-semibold">Confirmar</button>
+                } @else {
+                    <button (click)="pacienteCancelaTurno(true)" class="bg-red-600 p-3 text-white rounded-md font-semibold">Confirmar</button>
+                }
+            } @else {
+                <button disabled class="bg-zinc-600 p-3 text-white rounded-md font-semibold">Confirmar</button>
+            }
+            <button (click)="pacienteCancelaTurno(false)" class="bg-green-600 p-3 text-white rounded-md font-semibold">Volver</button>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="calificandoTurno" class="absolute h-screen w-screen z-[100] flex justify-center items-center backdrop-blur-2xl">
+    <div class="h-96 w-96 flex flex-col justify-center items-center gap-5 bg-slate-100 rounded-md px-10 py-5">
+        <p class="text-xl font-bold text-yellow-600 text-center">Calificar turno del dia {{turnoACalificar.dia}} a las {{turnoACalificar.hora}}</p>
+        <p class="text-customDarkBlue text-base font-medium text-center">Deja una reseña de la atencion recibida</p>
+        <textarea type="text" placeholder="Raeseña" [(ngModel)]="resenaDelPaciente" class="h-11 w-[95%] bg-white rounded-md p-2"></textarea>
+        @if (resenaDelPaciente != '') {
+            <p class="text-customDarkBlue text-base font-medium text-center">¿Cuantos puntos le darias del 1 al 10?</p>
+            <div class="w-full h-full grid grid-cols-5 justify-center items-center gap-1.5">
+                @for (item of [1,2,3,4,5,6,7,8,9,10]; track $index) {
+                    <div (click)="pacienteCalificaTurno(item)" class="w-10 h-10 rounded-md flex justify-center items-center bg-yellow-500 text-white cursor-pointer hover:scale-95 hover:bg-yellow-600 transition-all">
+                        {{item}}
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+
+<div *ngIf="rechazandoTurno" class="absolute h-screen w-screen z-[100] flex justify-center items-center backdrop-blur-2xl">
+    <div class="h-96 w-96 flex flex-col justify-center items-center gap-5 bg-slate-100 rounded-md px-10 py-5">
+        <p class="text-xl font-bold text-red-600 text-center">Rechazar turno del dia {{turnoARechazar.dia}} a las {{turnoARechazar.hora}}</p>
+        <p class="text-customDarkBlue text-base font-medium text-center">Cuentanos la razon de tu cancelación</p>
+        <textarea type="text" placeholder="Razon de cancelación" [(ngModel)]="razonDeCancelacion" class="h-11 w-[95%] bg-white rounded-md p-2"></textarea>
+        <div class="flex flex-row justify-center gap-3">
+            @if (razonDeCancelacion != "") {
+                <button (click)="especialistaRechazaTurno(true)" class="bg-red-600 p-3 text-white rounded-md font-semibold">Confirmar</button>
+            } @else {
+                <button disabled class="bg-zinc-600 p-3 text-white rounded-md font-semibold">Confirmar</button>
+            }
+            <button (click)="especialistaRechazaTurno(false)" class="bg-green-600 p-3 text-white rounded-md font-semibold">Volver</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="finalizandoTurno" class="absolute h-screen w-screen z-[100] flex justify-center items-center backdrop-blur-2xl">
+    <div class="h-96 w-96 flex flex-col justify-center items-center gap-5 bg-slate-100 rounded-md px-10 py-5">
+        <p class="text-xl font-bold text-red-600 text-center">Finalizar turno del dia {{turnoAFinalizar.dia}} a las {{turnoAFinalizar.hora}}</p>
+        <p class="text-customDarkBlue text-base font-medium text-center">Deja una reseña del diagnostico y el turno del paciente</p>
+        <textarea type="text" placeholder="Raeseña" [(ngModel)]="resenaDelEspecialista" class="h-11 w-[95%] bg-white rounded-md p-2"></textarea>
+        <div class="flex flex-row justify-center gap-3">
+            @if (resenaDelEspecialista != "") {
+                <button (click)="especialistaFinalizaTurno(true)" class="bg-red-600 p-3 text-white rounded-md font-semibold">Confirmar</button>
+            } @else {
+                <button disabled class="bg-zinc-600 p-3 text-white rounded-md font-semibold">Confirmar</button>
+            }
+            <button (click)="especialistaFinalizaTurno(false)" class="bg-green-600 p-3 text-white rounded-md font-semibold">Volver</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="pacienteViendoResena" class="absolute h-screen w-screen z-[100] flex justify-center items-center backdrop-blur-2xl">
+    <div class="h-96 w-96 flex flex-col justify-center items-center gap-5 bg-slate-100 rounded-md px-10 py-5">
+        <p class="text-xl font-bold text-red-600 text-center">Reseña/Diagnostico de tu turno del dia {{turnoAVerResena.dia}} a las {{turnoAVerResena.hora}}</p>
+        <p class="text-base text-customDarkBlue font-semibold">{{turnoAVerResena.resenaDelEspecialista}}</p>
+        <p appCopiarAlPortapapeles={{turnoAVerResena.resenaDelEspecialista}} class="text-zinc-700 text-xs font-light hover:font-medium hover:text-zinc-800 cursor-pointer">Copiar reseña al portapapeles</p>
+        <button (click)="pacienteViendoResena = false" class="bg-green-600 p-3 text-white rounded-md font-semibold">Volver</button>
+    </div>
+</div>
+
+<div *ngIf="especialistaViendoResena" class="absolute h-screen w-screen z-[100] flex justify-center items-center backdrop-blur-2xl">
+    <div class="h-96 w-96 flex flex-col justify-center items-center gap-5 bg-slate-100 rounded-md px-10 py-5">
+        <p class="text-xl font-bold text-red-600 text-center">Reseña/Diagnostico del turno del dia {{turnoAVerResena.dia}} a las {{turnoAVerResena.hora}} con el paciente: {{getNombreDelPaciente(turnoAVerResena.paciente)}}</p>
+        <p class="text-base text-customDarkBlue font-semibold">{{turnoAVerResena.resenaDelPaciente}}</p>
+        <p appCopiarAlPortapapeles={{turnoAVerResena.resenaDelPaciente}} class="text-zinc-700 text-xs font-light hover:font-medium hover:text-zinc-800 cursor-pointer">Copiar reseña al portapapeles</p>
+        <button (click)="especialistaViendoResena = false" class="bg-green-600 p-3 text-white rounded-md font-semibold">Volver</button>
+    </div>
+</div>
+
+<div *ngIf="especialistaViendoCancelacion" class="absolute h-screen w-screen z-[100] flex justify-center items-center backdrop-blur-2xl">
+    <div class="h-96 w-96 flex flex-col justify-center items-center gap-5 bg-slate-100 rounded-md px-10 py-5">
+        <p class="text-xl font-bold text-red-600 text-center">Motivo de cancelación del turno del dia {{turnoAVerCancelacion.dia}} a las {{turnoAVerCancelacion.hora}} con el paciente: {{getNombreDelPaciente(turnoAVerCancelacion.paciente)}}</p>
+        <p class="text-base text-customDarkBlue font-semibold">{{turnoAVerCancelacion.razonCancelacion}}</p>
+        <button (click)="especialistaViendoCancelacion = false" class="bg-green-600 p-3 text-white rounded-md font-semibold">Volver</button>
+    </div>
+</div>
+
+<div *ngIf="pacienteViendoMotivoCancelacion" class="absolute h-screen w-screen z-[100] flex justify-center items-center backdrop-blur-2xl">
+    <div class="h-96 w-96 flex flex-col justify-center items-center gap-5 bg-slate-100 rounded-md px-10 py-5">
+        <p class="text-xl font-bold text-red-600 text-center">Motivo de cancelación del turno del dia {{turnoAVerCancelacion.dia}} a las {{turnoAVerCancelacion.hora}} con el doctor/a: {{getNombreDelEspecialista(turnoAVerCancelacion.especialista)}}</p>
+        <p class="text-base text-customDarkBlue font-semibold">{{turnoAVerCancelacion.razonCancelacion}}</p>
+        <button (click)="pacienteViendoMotivoCancelacion = false" class="bg-green-600 p-3 text-white rounded-md font-semibold">Volver</button>
+    </div>
+</div>
+
+<div *ngIf="pacienteViendoMotivoRechazo" class="absolute h-screen w-screen z-[100] flex justify-center items-center backdrop-blur-2xl">
+    <div class="h-96 w-96 flex flex-col justify-center items-center gap-5 bg-slate-100 rounded-md px-10 py-5">
+        <p class="text-xl font-bold text-red-600 text-center">Motivo de rechazo del turno del dia {{turnoAVerRechazo.dia}} a las {{turnoAVerRechazo.hora}} con el doctor/a: {{getNombreDelEspecialista(turnoAVerRechazo.especialista)}}</p>
+        <p class="text-base text-customDarkBlue font-semibold">{{turnoAVerRechazo.razonRechazo}}</p>
+        <button (click)="pacienteViendoMotivoRechazo = false" class="bg-green-600 p-3 text-white rounded-md font-semibold">Volver</button>
+    </div>
+</div>
+
+<div *ngIf="pacienteViendoEncuesta" class="absolute h-screen w-screen z-[100] flex justify-center items-center backdrop-blur-2xl">
+    <div class="h-96 w-96 flex flex-col justify-center items-center gap-5 bg-slate-100 rounded-md px-10 py-5">
+        <p class="text-2xl text-customDarkBlue font-bold text-center">Proximamente...</p>
+        <button (click)="pacienteViendoEncuesta = false" class="bg-green-600 p-3 text-white rounded-md font-semibold">Volver</button>
+    </div>
+</div>
+
+
+<div class="h-screen w-screen flex flex-col overflow-x-hidden bg-slate-300">
+    <div class="h-16 min-h-16 w-full flex flex-row items-center justify-between px-6 bg-customDarkBlue z-50">
+        <div class="h-full flex flex-1 items-center flex-row gap-4">
+            <img src="/assets/clinica.png" alt="" class="h-7 w-7">
+            <h1 class="text-slate-100 font-bold text-xl">Clinica</h1>
+        </div>
+        <div class="w-full h-full flex flex-1 items-center justify-end flex-row gap-12">
+            <div class="w-full h-full flex flex-row items-end justify-end">
+                @switch (pantalla) {
+                    @case ('misturnos') {
+                        <div (click)="pantalla = 'misturnos'" class="bg-slate-300 w-max h-full flex items-center flex-row gap-1 px-3 cursor-pointer rounded-t-md">
+                            <img src="/assets/home/misturnos.png" alt="" class="h-5 w-5">
+                            <p class="text-sm font-semibold text-customDarkBlue whitespace-nowrap transition-all">Mis turnos</p>
+                        </div>
+                        @if (user.type != 'especialista') {
+                        <div (click)="pantalla = 'solicitarturno'" class="group h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer hover:bg-white/20 hover:rounded-t-md transition-all">
+                            <img src="/assets/home/sacarturnos_blanco.png" alt="" class="h-5 w-5">
+                            <p class="text-sm font-medium text-white whitespace-nowrap transition-all">Solicitar turno</p>
+                        </div>
+                        } @else {
+                            <div (click)="pantalla = 'pacientes'" class="group h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer hover:bg-white/20 hover:rounded-t-md transition-all">
+                                <img src="/assets/home/pacientes_blanco.png" alt="" class="h-5 w-5">
+                                <p class="text-sm font-medium text-white whitespace-nowrap transition-all">Pacientes</p>
+                            </div>
+                        }
+                        @if (user.type === 'admin') {
+                            <div routerLink="usuarios" class="group h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer hover:bg-white/20 hover:rounded-t-md transition-all">
+                                <img src="/assets/home/usuarios_blanco.png" alt="" class="h-5 w-5">
+                                <p class="text-sm font-medium text-white whitespace-nowrap transition-all">Todos los usuarios</p>
+                            </div>
+                            <div (click)="pantalla = 'todosturnos'" class="group h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer hover:bg-white/20 hover:rounded-t-md transition-all">
+                                <img src="/assets/home/todoslosturnos_blanco.png" alt="" class="h-4 w-4">
+                                <p class="text-sm font-medium text-white whitespace-nowrap transition-all">Todos los turnos</p>
+                            </div>
+                        }
+                    }
+                    @case ('solicitarturno') {
+                        <div (click)="pantalla = 'misturnos'" class="group h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer hover:bg-white/20 hover:rounded-t-md transition-all">
+                            <img src="/assets/home/misturnos_blanco.png" alt="" class="h-5 w-5">
+                            <p class="text-sm font-medium text-white whitespace-nowrap transition-all">Mis turnos</p>
+                        </div>
+                        <div (click)="pantalla = 'solicitarturno'" class="bg-slate-300 h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer rounded-t-md">
+                            <img src="/assets/home/sacarturnos.png" alt="" class="h-5 w-5">
+                            <p class="text-sm font-semibold text-customDarkBlue whitespace-nowrap transition-all">Solicitar turno</p>
+                        </div>
+                        @if (user.type === 'admin') {
+                            <div routerLink="/usuarios" class="group h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer hover:bg-white/20 hover:rounded-t-md transition-all">
+                                <img src="/assets/home/usuarios_blanco.png" alt="" class="h-5 w-5">
+                                <p class="text-sm font-medium text-white whitespace-nowrap transition-all">Todos los usuarios</p>
+                            </div>
+                            <div (click)="pantalla = 'todosturnos'" class="group h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer hover:bg-white/20 hover:rounded-t-md transition-all">
+                                <img src="/assets/home/todoslosturnos_blanco.png" alt="" class="h-4 w-4">
+                                <p class="text-sm font-medium text-white whitespace-nowrap transition-all">Todos los turnos</p>
+                            </div>
+                        }
+                    } 
+                    @case ('todosturnos') {
+                        <div (click)="pantalla = 'misturnos'" class="group h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer hover:bg-white/20 hover:rounded-t-md transition-all">
+                            <img src="/assets/home/misturnos_blanco.png" alt="" class="h-5 w-5">
+                            <p class="text-sm font-medium text-white whitespace-nowrap transition-all">Mis turnos</p>
+                        </div>
+                        @if (user.type != 'especialista') {
+                        <div (click)="pantalla = 'solicitarturno'" class="group h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer hover:bg-white/20 hover:rounded-t-md transition-all">
+                            <img src="/assets/home/sacarturnos_blanco.png" alt="" class="h-5 w-5">
+                            <p class="text-sm font-medium text-white whitespace-nowrap transition-all">Solicitar turno</p>
+                        </div>
+                        }
+                        @if (user.type === 'admin') {
+                            <div routerLink="/usuarios" class="group h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer hover:bg-white/20 hover:rounded-t-md transition-all">
+                                <img src="/assets/home/usuarios_blanco.png" alt="" class="h-5 w-5">
+                                <p class="text-sm font-medium text-white whitespace-nowrap transition-all">Todos los usuarios</p>
+                            </div>
+                            <div (click)="pantalla = 'todosturnos'" class="bg-slate-300 h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer rounded-t-md">
+                                <img src="/assets/home/todoslosturnos.png" alt="" class="h-4 w-4">
+                                <p class="text-sm font-semibold text-customDarkBlue whitespace-nowrap transition-all">Todos los turnos</p>
+                            </div>
+                        }
+                    } @case ('pacientes') {
+                        <div (click)="pantalla = 'misturnos'" class="group h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer hover:bg-white/20 hover:rounded-t-md transition-all">
+                            <img src="/assets/home/misturnos_blanco.png" alt="" class="h-5 w-5">
+                            <p class="text-sm font-medium text-white whitespace-nowrap transition-all">Mis turnos</p>
+                        </div>
+                        <div class="bg-slate-300 h-full flex items-center flex-row gap-1 w-max px-3 cursor-pointer rounded-t-md">
+                            <img src="/assets/home/pacientes.png" alt="" class="h-5 w-5">
+                            <p class="text-sm font-medium text-customDarkBlue whitespace-nowrap transition-all">Pacientes</p>
+                        </div>
+                    } 
+                }
+
+            </div>
+            <button (click)="irAPerfil()" class="rounded-full flex justify-center items-center min-w-10 shadow-2xl pr-6 sticky">
+                <img src={{user.foto1}} alt="" class="h-10 w-10 rounded-full absolute">
+            </button>
+        </div>
+        <div class="h-full w-12 flex justify-center items-center -ml-3">
+            <img (click)="toggleCerrandoSesion()" src="/assets/volver.png" alt="" class="h-3 w-3 -rotate-90 cursor-pointer">
+        </div>
+    </div>
+    @if (cerrandoSesion) {
+        <div class="w-full flex justify-end">
+            <button appConfirmLeave appToolTip="Saldrás de tu cuenta" (click)="cerrarSesion()" class="w-32 h-10 rounded-md flex justify-center items-center flex-row gap-1.5 cursor-pointer mr-[2%] mt-1 bg-red-600 hover:bg-red-800 transition-all">
+                <img src="/assets/volver.png" alt="" class="h-4 w-4 cursor-pointer">
+                <p class="text-sm font-medium text-white whitespace-nowrap">Cerrar Sesión</p>
+            </button>
+        </div>
+    }
+    
+    <div class="h-auto w-full flex flex-col justify-center items-center bg-slate-300">
+        @if(pantalla == 'solicitarturno') {
+            <div *ngIf="!especialistaElegido" class="h-full w-full flex">
+                <div class="ml-20 w-full flex justify-center">
+                    <p class="font-semibold text-xl text-customDarkBlue drop-shadow-md text-center">Selecciona un especialista</p>
+                    
+                    <div class="h-full w-full grid grid-cols-4 gap-8 p-8 justify-center items-center items-start">
+                            <div 
+                            *ngFor="let especialista of especialistas" 
+                            (click)="seleccionarEspecialista(especialista)"
+                            class="group w-48 h-64 flex flex-col items-center gap-3 p-5 justify-center bg-white rounded-lg shadow-lg cursor-pointer hover:shadow-none hover:bg-customLightBlue transition-all">
+                            <img 
+                                [src]="especialista.foto1 " 
+                                alt="Foto del especialista" 
+                                class="w-20 h-20 drop-shadow-md rounded-full">
+                            <p class="text-center font-bold text-customLightBlue group-hover:text-white transition-all">
+                                {{ especialista.name + " " + especialista.lastname }}
+                            </p>
+                            </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+            <div *ngIf="especialistaElegido">
+                    <div class="h-16 w-[90%] flex justify-start items-end">
+                        <div (click)="volver()" class="group z-50 w-20 h-9 rounded-full bg-red-600 text-white flex flex-row gap-1 justify-center items-center cursor-pointer hover:bg-white hover:text-customLightBlue hover:scale-95 transition-all">
+                            <img src="/assets/volver.png" alt="" class="h-4 w-4 group-hover:hidden">
+                            <img src="/assets/volver2.png" alt="" class="h-4 w-4 group-hover:block hidden">
+                            <p class="text-sm font-medium">Volver</p>
+                        </div>
+                    </div>
+                    <div class="h-16 w-full flex justify-center items-end">
+                        <p class="font-semibold text-xl text-customDarkBlue drop-shadow-md text-center">
+                            Selecciona una especialidad para {{ especialistaElegido.name + " " + especialistaElegido.lastname }}
+                        </p>
+                    </div>
+                    <div class="h-full w-full grid grid-cols-4 p-8 justify-center items-center gap-8">
+                        <div
+                            *ngFor="let especialidad of especialistaElegido.especialidad"
+                            (click)="especialidadElegida = especialidad"
+                            [class.bg-customLightBlue]="especialidadElegida === especialidad"
+                            class="group w-48 h-20 flex flex-col items-center gap-3 p-4 justify-center bg-white rounded-lg shadow-lg cursor-pointer hover:shadow-none hover:bg-customLightBlue transition-all">
+                            <img [src]="getImageUrl(especialidad)" alt="" class="w-14 h-14 drop-shadow-md">
+                            <p class="w-full text-center font-bold text-customLightBlue drop-shadow-md group-hover:text-white group-hover:drop-shadow-md transition-all">
+                                {{ especialidad }}
+                            </p>
+                        </div>
+                        <div *ngIf="especialidadElegida" class="flex-1 w-full h-full p-6 flex flex-col gap-3">
+                            <p class="text-customDarkBlue font-bold">Turnos disponibles:</p>
+                            <div class="flex-1 w-full h-full p-6 flex flex-col gap-3">
+                                <p class="text-customDarkBlue font-bold">Elije el día de tu turno:</p>
+                                <div class="h-full w-full grid grid-cols-5 gap-1.5">
+                                    <div *ngFor="let dia of diasYHorarios">
+                                        <div class="w-full">
+                                            <div *ngFor="let horario of dia.horarios">
+                                                <button 
+                                                    (click)="manejarClickTurno(dia.fecha, horario)"
+                                                    class="w-full py-2 mb-2 text-sm font-semibold text-customLightBlue bg-white border rounded-md hover:bg-customLightBlue hover:text-white transition-all">
+                                                    {{ dia.fecha }} - {{ horario }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                        </div>
+                    </div>
+                    <div *ngIf="especialidadElegida" id="confirmarturno" 
+                            class="bg-white w-[90%] h-60 shadow-md flex flex-col justify-center items-center mb-10 p-6 gap-10">
+                        <div class="w-full flex justify-center items-center">
+                            <p class="text-customDarkBlue font-bold text-lg">Chequeá la información de tu turno</p>
+                        </div>
+                        <div class="w-full flex flex-row gap-5 justify-center items-center">
+                            <div class="flex flex-1 justify-center flex-row gap-1.5 whitespace-nowrap">
+                            <p class="text-customDarkBlue font-medium">Especialidad:</p>
+                            <p class="text-customDarkBlue font-bold">{{ especialidadElegida }}</p>
+                            </div>
+                            <div class="flex flex-1 justify-center flex-row gap-1.5 whitespace-nowrap">
+                            <p class="text-customDarkBlue font-medium">Médico:</p>
+                            <p class="text-customDarkBlue font-bold">{{ especialistaElegido.name + " " + especialistaElegido.lastname }}</p>
+                            </div>
+                            <div class="flex flex-1 justify-center flex-row gap-1.5 whitespace-nowrap">
+                            <p class="text-customDarkBlue font-medium">Turno:</p>
+                            <p class="text-customDarkBlue font-bold">{{ horarioElegidoTurno + " " + diaElegidoTurno }}</p>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-center items-center">
+                            <button
+                            (click)="guardarUnTurno()"
+                            class="bg-customDarkBlue text-white font-bold px-5 py-2.5 hover:bg-customLightBlue hover:rounded-md active:scale-95 transition-all"
+                            >
+                            Confirmar Turno
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+        
+        } @else if (pantalla == 'misturnos') {
+            <div class="h-[90%] w-[90%] bg-white m-10 flex flex-col items-center justify-center p-6 gap-6 shadow-lg">
+                <div class="h-16 w-full flex justify-center items-center pb-">
+                    <p class="font-bold text-xl text-customDarkBlue drop-shadow-md text-center">Tus turnos</p>
+                </div>
+                @if(user.type == "paciente" || user.type == "admin") {
+                    <div class="h-20 w-[90%] flex flex-row justify-evenly items-center px-10 py-3 bg-slate-100 rounded-md">
+                        <p class="font-semibold text-base text-customDarkBlue drop-shadow-md text-center mr-6">Filtrar:</p>
+                        <div class="w-full h-full flex items-center">
+                            <input type="text" [(ngModel)]="textoBuscado" placeholder="Buscar por cualquiera de los campos" class="bg-white w-full h-[95%] px-4 rounded-md">
+                        </div>
+                    </div>
+                    <div class="flex w-full h-full justify-center">
+                        <div class="h-[90%] max-h-[90%] w-[95%] rounded-md border-2 border-customDarkBlue overflow-y-auto">
+                            <table class="w-full h-full">
+                                <thead class="w-full">
+                                    <tr class="w-full h-8 bg-customDarkBlue text-slate-100">
+                                        <th class="flex-1">Paciente</th>
+                                        <th class="flex-1">Especialidad</th>
+                                        <th class="flex-1">Medico</th>
+                                        <th class="flex-1">Dia</th>
+                                        <th class="flex-1">Horario</th>
+                                        <th class="flex-1">Estado</th>
+                                        <th class="flex-1">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="w-full">
+                                    @for (item of turnosDelPaciente; track $index ) {
+                                        @if (textoBuscado != '') {
+                                            @if(getNombreDelPaciente(item.paciente).toLowerCase().includes(textoBuscado.toLowerCase()) 
+                                            || getNombreDelEspecialista(item.especialista).toLowerCase().includes(textoBuscado.toLowerCase()) 
+                                            || item.especialidad.toLowerCase().includes(textoBuscado.toLowerCase()) 
+                                            || item.dia.toLowerCase().includes(textoBuscado.toLowerCase()) 
+                                            ||  item.estadoDelTurno.toLowerCase().includes(textoBuscado.toLowerCase())) {
+                                                <tr class="w-full bg-slate-100 font-medium text-customDarkBlue min-h-11" >
+                                                    <td class="flex-1 border-r border-customDarkBlue text-center">{{user.name + " " + user.lastname}}</td>
+                                                    <td class="flex-1 border-r border-customDarkBlue text-center">{{ item.especialidad }}</td>
+                                                    <td class="flex-1 border-r border-customDarkBlue text-center">{{getNombreDelEspecialista(item.especialista)}}</td>
+                                                    <td class="flex-1 border-r border-customDarkBlue text-center">{{item.dia}}</td>
+                                                    <td class="flex-1 border-r border-customDarkBlue text-center">{{item.hora}}</td>
+                                                    @if(turnoYaPaso(item)) {
+                                                        @if (item.estadoDelTurno == 'realizado') {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        } @else {
+                                                            @switch (item.estadoDelTurno) {
+                                                                @case ('pendiente') {
+                                                                    <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-yellow-500">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                                }
+                                                                @case ('aceptado') {
+                                                                    <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                                }
+                                                                @default {
+                                                                    <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-red-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                                }
+                                                            }
+                                                        }
+                                                        
+                                                    } @else {
+                                                        @switch (item.estadoDelTurno) {
+                                                            @case ('pendiente') {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-yellow-500">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                            @case ('aceptado') {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                            @case ('realizado') {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                            @default {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-red-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                        }
+                                                    }
+                                                    <td class="flex-1 border-r border-customDarkBlue text-center">
+                                                        @if (item.estadoDelTurno != 'cancelado' && item.estadoDelTurno != 'rechazado') {
+                                                            @if (item.estadoDelTurno != 'realizado') {
+                                                                <div class="w-full flex justify-center gap-2 p-2">
+                                                                    <div (click)="clickCancelarButton(item)" class="h-8 w-full rounded-md bg-red-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                        <p>Cancelar</p>
+                                                                    </div>
+                                                                </div>
+                                                            } @else {
+                                                                <div class="w-full flex justify-center gap-2 p-2">
+                                                                    @if(item.resenaDelEspecialista != '') {
+                                                                        <div (click)="pacienteVerResena(item)" class="h-8 w-full rounded-md bg-green-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                            <p>Ver reseña</p>
+                                                                        </div>
+                                                                    }
+                                                                    @if (item.calificacion == -1) {
+                                                                        <div (click)="clickCalificarButton(item)" class="h-8 w-full rounded-md bg-green-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                            <p>Calificar</p>
+                                                                        </div>
+                                                                    }
+                                                                    <div (click)="pacienteViendoEncuesta = true" class="h-8 w-full rounded-md bg-yellow-500 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                        <p>Encuesta</p>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        } @else {
+                                                            <div class="w-full flex justify-center gap-2 p-2">
+                                                                @if (item.estadoDelTurno == 'rechazado') {
+                                                                    @if(item.razonRechazo != '') {
+                                                                        <div (click)="pacienteVerMotivoRechazo(item)" class="h-8 p-2 w-full rounded-md bg-yellow-500 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                            <p>Ver motivo</p>
+                                                                        </div>
+                                                                    }
+                                                                } @else {
+                                                                    @if (item.estadoDelTurno == 'cancelado') {
+                                                                        @if (item.razonCancelacion != "" && item.estadoDelTurno != undefined) {
+                                                                            <div (click)="pacienteVerMotivoCancelacion(item)" class="h-8 w-full rounded-md bg-yellow-500 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                                <p>Ver motivo</p>
+                                                                            </div>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        } @else {
+                                            <tr class="w-full bg-slate-100 font-medium text-customDarkBlue min-h-11 border-b border-customDarkBlue">
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{user.name + " " + user.lastname}}</td>
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{item.especialidad}}</td>
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{getNombreDelEspecialista(item.especialista)}}</td>
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{item.dia}}</td>
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{item.hora}}</td>
+                                                @if(turnoYaPaso(item)) {
+                                                    @if (item.estadoDelTurno == 'realizado') {
+                                                        <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                    } @else {
+                                                        @switch (item.estadoDelTurno) {
+                                                            @case ('pendiente') {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-yellow-500">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                            @case ('aceptado') {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                            @default {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-red-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                        }
+                                                    }
+                                                    
+                                                } @else {
+                                                    @switch (item.estadoDelTurno) {
+                                                        @case ('pendiente') {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-yellow-500">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        }
+                                                        @case ('aceptado') {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        }
+                                                        @case ('realizado') {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        }
+                                                        @default {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-red-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        }
+                                                    }
+                                                }
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">
+                                                    @if (item.estadoDelTurno != 'cancelado' && item.estadoDelTurno != 'rechazado') {
+                                                        @if (item.estadoDelTurno != 'realizado') {
+                                                            <div class="w-full flex justify-center gap-2 p-2">
+                                                                <div appToolTip="Cancelaras tu turno" (click)="clickCancelarButton(item)" class="h-8 w-full rounded-md bg-red-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                    <p>Cancelar</p>
+                                                                </div>
+                                                            </div>
+                                                        } @else {
+                                                            <div class="w-full flex justify-center gap-2 p-2">
+                                                                @if(item.resenaDelEspecialista != '') {
+                                                                    <div appToolTip="Veras la reseña del medico" (click)="pacienteVerResena(item)" class="h-8 w-full rounded-md bg-green-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                        <p>Ver reseña</p>
+                                                                    </div>
+                                                                }
+                                                                @if (item.calificacion == -1) {
+                                                                    <div appToolTip="Calificaras la atencion del medico" (click)="clickCalificarButton(item)" class="h-8 w-full rounded-md bg-green-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                        <p>Calificar</p>
+                                                                    </div>
+                                                                }
+                                                                <div appToolTip="No disponible aún" (click)="pacienteViendoEncuesta = true" class="h-8 w-full rounded-md bg-yellow-500 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                    <p>Encuesta</p>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    } @else {
+                                                        <div class="w-full flex justify-center gap-2 p-2">
+                                                            @if (item.estadoDelTurno == 'rechazado') {
+                                                                @if(item.razonRechazo != '') {
+                                                                    <div appToolTip="Ver motio de rechazo de turno" (click)="pacienteVerMotivoRechazo(item)" class="h-8 p-2 w-full rounded-md bg-yellow-500 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                        <p>Ver motivo</p>
+                                                                    </div>
+                                                                }
+                                                            } @else {
+                                                                @if (item.estadoDelTurno == 'cancelado') {
+                                                                    @if (item.razonCancelacion != "" && item.estadoDelTurno != undefined) {
+                                                                        <div appToolTip="Ver motivo de cancelacion de turno" (click)="pacienteVerMotivoCancelacion(item)" class="h-8 w-full rounded-md bg-yellow-500 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                            <p>Ver motivo</p>
+                                                                        </div>
+                                                                    }
+                                                                }
+                                                            }
+                                                        </div>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                } @else if(user.type == "especialista") {
+                    <div class="h-20 w-[90%] flex flex-row justify-evenly items-center px-10 py-3 bg-slate-100 rounded-md">
+                        <p class="font-semibold text-base text-customDarkBlue drop-shadow-md text-center mr-6">Filtrar:</p>
+                        <div class="w-full h-full flex items-center">
+                            <input type="text" [(ngModel)]="textoBuscado" placeholder="Buscar por cualquier campo del turno" class="bg-white w-full h-[95%] px-4 rounded-md">
+                        </div>
+                    </div>
+                    <div class="flex w-full h-full justify-center">
+                        <div class="h-[90%] max-h-[90%] w-[95%] rounded-md border-2 border-customDarkBlue overflow-y-auto">
+                            <table class="w-full h-full">
+                                <thead class="w-full">
+                                    <tr class="w-full h-8 bg-customDarkBlue text-slate-100">
+                                        <th class="flex-1">Paciente</th>
+                                        <th class="flex-1">Especialidad</th>
+                                        <th class="flex-1">Dia</th>
+                                        <th class="flex-1">Horario</th>
+                                        <th class="flex-1">Estado</th>
+                                        <th class="flex-1">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="w-full">
+                                    @for (item of turnosDelEspecialista; track $index ) {
+                                        @if (textoBuscado != '') {
+                                            @if(getNombreDelPaciente(item.paciente).toLowerCase().includes(textoBuscado.toLowerCase()) || item.especialidad.toLowerCase().includes(textoBuscado.toLowerCase()) || item.dia.toLowerCase().includes(textoBuscado.toLowerCase()) ||  item.estadoDelTurno.toLowerCase().includes(textoBuscado.toLowerCase())) {
+                                                <tr class="w-full bg-slate-100 font-medium text-customDarkBlue min-h-11" >
+                                                    <td class="flex-1 border-r border-customDarkBlue text-center">{{getNombreDelPaciente(item.paciente)}}</td>
+                                                    <td class="flex-1 border-r border-customDarkBlue text-center">{{getEspecialidadDeUnEspecialista(item.especialista)}}</td>
+                                                    <td class="flex-1 border-r border-customDarkBlue text-center">{{item.dia}}</td>
+                                                    <td class="flex-1 border-r border-customDarkBlue text-center">{{item.hora}}</td>
+                                                    @if(turnoYaPaso(item)) {
+                                                        @if (item.estadoDelTurno == 'realizado') {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        } @else {
+                                                            @switch (item.estadoDelTurno) {
+                                                                @case ('pendiente') {
+                                                                    <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-yellow-500">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                                }
+                                                                @case ('aceptado') {
+                                                                    <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                                }
+                                                                @default {
+                                                                    <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-red-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                                }
+                                                            }
+                                                        }
+                                                        
+                                                    } @else {
+                                                        @switch (item.estadoDelTurno) {
+                                                            @case ('pendiente') {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-yellow-500">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                            @case ('aceptado') {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                            @case ('realizado') {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                            @default {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-red-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                        }
+                                                    }
+                                                    <td class="flex-1 border-r border-customDarkBlue text-center">
+                                                        @if(item.estadoDelTurno != 'realizado') {
+                                                            @if (item.estadoDelTurno != 'rechazado') {
+                                                                @if(item.estadoDelTurno != 'cancelado' && item.estadoDelTurno != 'aceptado') {
+                                                                    <div class="w-full flex justify-center gap-2 p-2">
+                                                                        <div (click)="clickRechazarButton(item)" class="h-8 w-full rounded-md bg-red-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                            <p>Rechazar</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="w-full flex justify-center gap-2 p-2">
+                                                                        <div (click)="clickCancelarButton(item)" class="h-8 w-full rounded-md bg-red-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                            <p>Cancelar</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="w-full flex justify-center gap-2 p-2">
+                                                                        <div (click)="especialistaAceptaTurno(item)" class="h-8 w-full rounded-md bg-green-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                            <p>Aceptar</p>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                            @if(item.estadoDelTurno == 'cancelado') {
+                                                                <div class="w-full flex justify-center gap-2 p-2">
+                                                                    <div (click)="especialistaVerMotivoCancelacion(item)" class="h-8 w-full rounded-md bg-yellow-500 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                        <p>Ver motivo</p>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            @if(item.estadoDelTurno == 'aceptado') {
+                                                                <div class="w-full flex justify-center gap-2 p-2">
+                                                                    <div (click)="clickRealizadoButton(item)" class="h-8 w-full rounded-md bg-sky-800 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                        <p>Realizado</p>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        } @else {
+                                                            @if (item.resenaDelPaciente != '') {
+                                                                <div class="w-full flex justify-center gap-2 p-2">
+                                                                    <div (click)="especialistaVerResena(item)" class="h-8 w-full rounded-md bg-yellow-500 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                        <p>Ver reseña</p>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        } @else {
+                                            <tr class="w-full bg-slate-100 font-medium text-customDarkBlue min-h-11 border-b border-customDarkBlue">
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{getNombreDelPaciente(item.paciente)}}</td>
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{getEspecialidadDeUnEspecialista(item.especialista)}}</td>
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{item.dia}}</td>
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{item.hora}}</td>
+                                                @if(turnoYaPaso(item)) {
+                                                    @if (item.estadoDelTurno == 'realizado') {
+                                                        <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                    } @else {
+                                                        @switch (item.estadoDelTurno) {
+                                                            @case ('pendiente') {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-yellow-500">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                            @case ('aceptado') {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                            @default {
+                                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-red-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                            }
+                                                        }
+                                                    }
+                                                    
+                                                } @else {
+                                                    @switch (item.estadoDelTurno) {
+                                                        @case ('pendiente') {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-yellow-500">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        }
+                                                        @case ('aceptado') {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        }
+                                                        @case ('realizado') {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        }
+                                                        @default {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-red-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        }
+                                                    }
+                                                }
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">
+                                                    @if(item.estadoDelTurno != 'realizado') {
+                                                        @if (item.estadoDelTurno != 'rechazado') {
+                                                            @if(item.estadoDelTurno != 'cancelado' && item.estadoDelTurno != 'aceptado') {
+                                                                <div class="w-full flex justify-center gap-2 p-2">
+                                                                    <div appToolTip="Rechazaras el turno del paciente" (click)="clickRechazarButton(item)" class="h-8 w-full rounded-md bg-red-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                        <p>Rechazar</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="w-full flex justify-center gap-2 p-2">
+                                                                    <div appToolTip="Cancelaras el turno del paciente" (click)="clickCancelarButton(item)" class="h-8 w-full rounded-md bg-red-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                        <p>Cancelar</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="w-full flex justify-center gap-2 p-2">
+                                                                    <div appToolTip="Aceptaras el turno del paciente" (click)="especialistaAceptaTurno(item)" class="h-8 w-full rounded-md bg-green-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                        <p>Aceptar</p>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        }
+                                                        @if(item.estadoDelTurno == 'cancelado') {
+                                                            <div class="w-full flex justify-center gap-2 p-2">
+                                                                <div appToolTip="Veras el motivo de cancelacion del paciente" (click)="especialistaVerMotivoCancelacion(item)" class="h-8 w-full rounded-md bg-yellow-500 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                    <p>Ver motivo</p>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        @if(item.estadoDelTurno == 'aceptado') {
+                                                            <div class="w-full flex justify-center gap-2 p-2">
+                                                                <div appToolTip="Marcaras el turno como FINALIZADO" (click)="clickRealizadoButton(item)" class="h-8 w-full rounded-md bg-sky-800 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                    <p>Realizado</p>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    } @else {
+                                                        @if (item.resenaDelPaciente != '') {
+                                                            <div class="w-full flex justify-center gap-2 p-2">
+                                                                <div appToolTip="Veras la reseña del paciente sobre tu atencion" (click)="especialistaVerResena(item)" class="h-8 w-full rounded-md bg-yellow-500 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                    <p>Ver reseña</p>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+            </div>
+        } @else if (pantalla == 'todosturnos') {
+            <div class="h-[90%] w-[90%] bg-white m-10 flex flex-col items-center justify-center p-6 gap-6 shadow-lg">
+                <div class="h-16 w-full flex justify-center items-center pb-">
+                    <p class="font-bold text-xl text-customDarkBlue drop-shadow-md text-center">Todos los turnos de la clinica</p>
+                </div>
+                <div class="h-20 w-[90%] flex flex-row justify-evenly items-center px-10 py-3 bg-slate-100 rounded-md">
+                    <p class="font-semibold text-base text-customDarkBlue drop-shadow-md text-center mr-6">Filtrar:</p>
+                    <div class="w-full h-full flex items-center">
+                        <input type="text" [(ngModel)]="textoBuscado" placeholder="Buscar por especialista o especialidad" class="bg-white w-full h-[95%] px-4 rounded-md">
+                    </div>
+                </div>
+                <div class="flex w-full h-full justify-center">
+                    <div class="h-[90%] max-h-[90%] w-[95%] rounded-md border-2 border-customDarkBlue overflow-y-auto">
+                        <table class="w-full h-full">
+                            <thead class="w-full">
+                                <tr class="w-full h-8 bg-customDarkBlue text-slate-100">
+                                    <th class="flex-1">Paciente</th>
+                                    <th class="flex-1">Especialidad</th>
+                                    <th class="flex-1">Medico</th>
+                                    <th class="flex-1">Dia</th>
+                                    <th class="flex-1">Horario</th>
+                                    <th class="flex-1">Estado</th>
+                                    <th class="flex-1">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="w-full">
+                                @for (item of todosLosTurnos; track $index ) {
+                                    @if (textoBuscado != '') {
+                                        @if(getNombreDelEspecialista(item.especialista).toLowerCase().includes(textoBuscado) || item.especialidad.toLowerCase().includes(textoBuscado) || item.dia.toLowerCase().includes(textoBuscado.toLowerCase()) ||  item.estadoDelTurno.toLowerCase().includes(textoBuscado.toLowerCase())) {
+                                            <tr class="w-full bg-slate-100 font-medium text-customDarkBlue min-h-11" >
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{getNombreDelPaciente(item.paciente)}}</td>
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{getEspecialidadDeUnEspecialista(item.especialista)}}</td>
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{getNombreDelEspecialista(item.especialista)}}</td>
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{item.dia}}</td>
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">{{item.hora}}</td>
+                                                @if(turnoYaPaso(item) && item.estadoDelTurno == "realizado") {
+                                                    <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                } @else {
+                                                    @switch (item.estadoDelTurno) {
+                                                        @case ('pendiente') {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-yellow-500">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        }
+                                                        @case ('aceptado') {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        }
+                                                        @default {
+                                                            <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-red-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                        }
+                                                    }
+                                                }
+                                                <td class="flex-1 border-r border-customDarkBlue text-center">
+                                                    @if(item.estadoDelTurno != 'realizado') {
+                                                        @if (item.estadoDelTurno != 'rechazado' && item.estadoDelTurno != 'aceptado' && item.estadoDelTurno != 'cancelado'){
+                                                            <div class="w-full flex justify-center items-center py-1 px-4">
+                                                                <div (click)="clickCancelarButton(item)" class="h-8 w-full rounded-md bg-red-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                    <p>Cancelar</p>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    } 
+                                                </td>
+                                            </tr>
+                                        }
+                                    } @else {
+                                        <tr class="w-full bg-slate-100 font-medium text-customDarkBlue min-h-11 border-b border-customDarkBlue">
+                                            <td class="flex-1 border-r border-customDarkBlue text-center">{{getNombreDelPaciente(item.paciente)}}</td>
+                                            <td class="flex-1 border-r border-customDarkBlue text-center">{{getEspecialidadDeUnEspecialista(item.especialista)}}</td>
+                                            <td class="flex-1 border-r border-customDarkBlue text-center">{{getNombreDelEspecialista(item.especialista)}}</td>
+                                            <td class="flex-1 border-r border-customDarkBlue text-center">{{item.dia}}</td>
+                                            <td class="flex-1 border-r border-customDarkBlue text-center">{{item.hora}}</td>
+                                            @if(turnoYaPaso(item) && item.estadoDelTurno == "realizado") {
+                                                <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                            } @else {
+                                                @switch (item.estadoDelTurno) {
+                                                    @case ('pendiente') {
+                                                        <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-yellow-500">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                    }
+                                                    @case ('aceptado') {
+                                                        <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-green-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                    }
+                                                    @default {
+                                                        <td class="flex-1 border-r border-customDarkBlue text-center font-bold text-red-600">{{item.estadoDelTurno.toUpperCase()}}</td>
+                                                    }
+                                                }
+                                            }
+                                            <td class="flex-1 border-r border-customDarkBlue text-center">
+                                                @if(item.estadoDelTurno != 'realizado') {
+                                                    @if (item.estadoDelTurno != 'rechazado' && item.estadoDelTurno != 'aceptado' && item.estadoDelTurno != 'cancelado'){
+                                                        <div class="w-full flex justify-center items-center py-1 px-4">
+                                                            <div (click)="clickCancelarButton(item)" class="h-8 w-full rounded-md bg-red-600 text-white text-sm font-semibold flex justify-center items-center hover:bg-customDarkBlue hover:text-white active:scale-95 transition-all shadow-lg cursor-pointer">
+                                                                <p>Cancelar</p>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                } 
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>    
+        } @else if (pantalla == 'pacientes') {
+            <div class="h-[90%] w-[90%] bg-slate-100 m-10 flex flex-col items-center justify-center p-6 gap-6 shadow-lg">
+                <div class="h-16 w-full flex justify-center items-center pb-">
+                    <p class="font-bold text-xl text-customDarkBlue drop-shadow-md text-center">Tus pacientes</p>
+                </div>
+                <div class="h-28 w-[90%] flex flex-row justify-evenly items-center px-10 py-3 bg-slate-100 rounded-md">
+                    <p class="font-semibold text-base text-customDarkBlue drop-shadow-md text-center mr-6">Filtrar:</p>
+                    <div class="w-full h-full flex items-center">
+                        <input type="text" [(ngModel)]="textoBuscado" placeholder="Buscar por nombre y/o apellido" class="bg-white w-full h-[95%] px-4 rounded-md">
+                    </div>
+                </div>
+                <div class="flex w-full h-full justify-center">
+                    <div class=" h-auto w-[95%] grid grid-cols-4 justify-center gap-5 items-center px-6 rounded-md overflow-y-auto">
+                        @if (textoBuscado != "") {
+                            @for (item of pacientesDelEspecialista; track $index) {
+                                @if (getNombreDelPaciente(item.dni).toLowerCase().includes(textoBuscado.toLowerCase())) {
+                                    <div (click)="irAHistoriaClinico(item.dni)" class="group w-[100%] h-80 flex justify-start items-center gap-2 px-4 py-4 flex-col bg-white shadow-2xl rounded-md cursor-pointer text-customDarkBlue hover:bg-customDarkBlue hover:text-white hover:h-96 hover:justify-center hover:scale-95 hover:shadow-sm transition-all duration-300">
+                                        <div>
+                                            <img src={{item.foto1}} alt="" class="h-20 w-20 group-hover:scale-105 transition-all duration-300 object-cover object-center rounded-full">
+                                        </div>
+                                        <div class="">
+                                            <p class="text-base text-center font-bold">{{item.name + " " + item.lastname}}</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-center font-medium">{{item.dni}}</p>
+                                        </div>
+                                        <div class="flex flex-row gap-2">
+                                            <p class="text-sm text-center font-medium">Edad: {{item.edad}}</p>
+                                            <p class="text-sm text-center font-medium">|</p>
+                                            <p class="text-sm text-center font-medium">{{item.obrasocial}}</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-center">{{item.email}}</p>
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <p class="text-xs text-center font-semibold">Ultimos turnos</p>
+                                            <p class="text-xs text-center mt-1">{{turnosPorPaciente[item.dni][0].dia + "-" + turnosPorPaciente[item.dni][0].hora}}</p>
+                                            @if (turnosPorPaciente[item.dni][1]) {
+                                                <p class="text-xs text-center mt-1">{{turnosPorPaciente[item.dni][1].dia + "-" + turnosPorPaciente[item.dni][1].hora}}</p>
+        
+                                                @if (turnosPorPaciente[item.dni][2]) {
+                                                    <p class="text-xs text-center mt-1">{{turnosPorPaciente[item.dni][2].dia + "-" + turnosPorPaciente[item.dni][2].hora}}</p>
+                                                }
+                                            }
+                                        </div>
+                                        <div class="group-hover:block hidden mt-4 transition-all duration-300">
+                                            <p class="text-white font-bold text-sm text-center">Ver historia clinica</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        } @else {
+                            @for (item of pacientesDelEspecialista; track $index) {
+                                <div (click)="irAHistoriaClinico(item.dni)" class="group w-[100%] h-[340px] flex justify-start items-center gap-2 px-4 py-5 flex-col bg-white shadow-2xl rounded-md cursor-pointer text-customDarkBlue hover:bg-customDarkBlue hover:text-white hover:h-96 hover:justify-center hover:scale-95 hover:shadow-sm transition-all duration-300">
+                                    <div>
+                                        <img src={{item.foto1}} alt="" class="h-20 w-20 group-hover:scale-105 transition-all duration-300 object-cover object-center rounded-full">
+                                    </div>
+                                    <div class="">
+                                        <p class="text-base text-center font-bold">{{item.name + " " + item.lastname}}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-center font-medium">{{item.dni}}</p>
+                                    </div>
+                                    <div class="flex flex-row gap-2">
+                                        <p class="text-sm text-center font-medium">Edad: {{item.edad}}</p>
+                                        <p class="text-sm text-center font-medium">|</p>
+                                        <p class="text-sm text-center font-medium">{{item.obrasocial}}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-center">{{item.email}}</p>
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <p class="text-xs text-center font-semibold">Ultimos turnos</p>
+                                        <p class="text-xs text-center mt-1">{{turnosPorPaciente[item.dni][0].dia + "-" + turnosPorPaciente[item.dni][0].hora}}</p>
+                                        @if (turnosPorPaciente[item.dni][1]) {
+                                            <p class="text-xs text-center mt-1">{{turnosPorPaciente[item.dni][1].dia + "-" + turnosPorPaciente[item.dni][1].hora}}</p>
+    
+                                            @if (turnosPorPaciente[item.dni][2]) {
+                                                <p class="text-xs text-center mt-1">{{turnosPorPaciente[item.dni][2].dia + "-" + turnosPorPaciente[item.dni][2].hora}}</p>
+                                            }
+                                        }
+                                    </div>
+                                    <div class="group-hover:block hidden mt-4 transition-all duration-300">
+                                        <p class="text-white font-bold text-sm text-center">Ver historia clinica</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>   
+        }
+    </div>
+</div>
+@if (user.type == "admin") {
+    <div routerLink="/stats" class="absolute left-0 bottom-0 ml-8 mb-6 flex justify-center items-center bg-customDarkBlue text-white font-bold gap-2 px-4 py-2.5 flex-row rounded-lg cursor-pointer shadow-2xl hover:scale-95 hover:shadow-sm transition-all">
+        <p>Informes</p>
+        <img src="/src/assets/stats.png" alt="" class="h-4 w-4">
+    </div>
+}

@@ -1,0 +1,1 @@
+import{Pa as n,Qa as r,Ta as s,Ya as i,da as o}from"./chunk-FJKVMKAD.js";var a=class t{static \u0275fac=function(e){return new(e||t)};static \u0275cmp=o({type:t,selectors:[["app-registro"]],standalone:!0,features:[i],decls:2,vars:0,template:function(e,m){e&1&&(n(0,"p"),s(1,"registro works!"),r())}})};export{a as RegistroComponent};

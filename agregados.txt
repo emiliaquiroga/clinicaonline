@@ -1,0 +1,39 @@
+*** Sprint 1: grupo 7
+    AGREGADO: 
+    * Botones de Acceso rápido --> LOGIN
+        - Debe ser botones cuadrados 
+        - Debe tener la imagen de perfil del usuario 
+        - Debe estar a la izquierda del login uno abajo del otro 6 usuarios. (3 pacientes, 2 especialistas, 1 admin)
+    * Registro de usuarios
+        - Al ingresar a la página solo se deben ver 2 botones con la imagen que represente un paciente o especialista, según esa elección mostrará el formulario correspondiente. (Hecho)
+        - Estas imagenes tienen que estar en botones rectangulares uno abajo del otro. 
+
+*** SPRINT 2 grupo 2: 
+    Sacar un turno
+        - Comienza mostrando los PROFESIONALES en botones rectangulares con la imagen del mismo
+         y su nombre por debajo del botón 
+        - Una vez seleccionado mostrará las ESPECIALIDADES, en botones redondos, con la imagen de la especialidad. 
+        En caso de no tener muestra imagen por default
+
+    - Una vez seleccionada la especialidad, aparecerán los días y horarios con turnos disponibles para ese PROFESIONAL. 
+        Estos botones deben ser cuadrados con bordes redondeados. 
+        Formato (09-09 13:15) 
+
+*** SPRINT 3: 
+    - Sección Pacientes: Para los especialistas. Solo deberá mostrar los usuarios que el especialista haya atendido al menos 1 vez.
+        Mostrar los usuarios con CARD , con un detalle de las últimas 3 CUANDO FUERON LOS ULTIMOS TURNOS acceso a historia clinica 
+
+    - Sección usuarios: En la sección usuarios, solamente para el perfil Administrador, un excel con los datos de los usuarios. 
+        Mostrar los usuarios con CARD y al seleccionarlo me descarga los datos de que turnos tomo y con quien 
+
+    - Mi perfil: Para los usuarios paciente, un pdf con la historia clínica. El PDF tiene que tener
+        logo de la clínica, título del informe y fecha de emisión. Poder bajar Todas las atenciones que realice segun una ESPECIALIDAD 
+       
+
+    - Animaciones: Se debe agregar al menos 2, como mínimo, animaciones de transición entre componentes al navegar
+        la aplicación. Desde abajo 
+
+*** SPRINT 4: grupo 1 
+    * Graficos
+    - Usar la librería ChartJS
+    - Cantidad de turnos por especialidad en gráfico de torta.
